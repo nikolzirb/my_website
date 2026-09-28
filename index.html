@@ -1,0 +1,657 @@
+<!DOCTYPE HTML>
+
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width;initial-scale=1">
+<title>Brieselle Atelier</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    * { box-sizing:border-box; margin:0; padding:0; }
+
+    body {
+        font-family:'Poppins', sans-serif;
+        background:#fdeef0;
+        color:#5a3d47;
+    }
+
+    a { text-decoration:none; }
+
+    /* ---------- promo marquee ---------- */
+    #promo {
+        background:#8e2f4e;
+        color:#fff;
+        height:38px;
+        overflow:hidden;
+        display:flex;
+        align-items:center;
+    }
+    .promo-track {
+        display:flex;
+        width:max-content;
+        animation:promoScroll 30s linear infinite;
+    }
+    .promo-track span {
+        font-size:13px;
+        font-weight:600;
+        letter-spacing:0.5px;
+        padding:0 40px;
+        white-space:nowrap;
+    }
+    #promo:hover .promo-track { animation-play-state:paused; }
+
+    @keyframes promoScroll {
+        from { transform:translateX(0); }
+        to   { transform:translateX(-50%); }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+        .promo-track { animation:none; }
+    }
+
+    /* ---------- header / nav ---------- */
+    header {
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        padding:18px 30px;
+        background:#fff;
+        box-shadow:0 2px 8px rgba(219,112,147,0.12);
+        position:sticky;
+        top:0;
+        z-index:10;
+        flex-wrap:wrap;
+    }
+    #logo {
+        font-family:'Playfair Display', serif;
+        font-size:28px;
+        color:#b5476b;
+    }
+
+    /* ---------- hero banner ---------- */
+    #hero {
+        position:relative;
+        width:100%;
+        aspect-ratio:16/7;
+        max-height:380px;
+        overflow:hidden;
+    }
+    .slide {
+        position:absolute;
+        inset:0;
+        opacity:0;
+        transition:opacity 1.2s ease;
+    }
+    .slide.active { opacity:1; }
+    .slide img {
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        display:block;
+    }
+    #hero-overlay {
+        position:absolute;
+        inset:0;
+        background:linear-gradient(180deg, rgba(90,20,45,0.35), rgba(90,20,45,0.55));
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        padding:20px;
+        z-index:1;
+    }
+    #hero-overlay h1 {
+        font-family:'Dancing Script', cursive;
+        color:#fff;
+        font-size:56px;
+        margin-bottom:10px;
+    }
+    #hero-overlay p {
+        color:#fdeef0;
+        font-size:16px;
+        max-width:480px;
+        margin-bottom:24px;
+        line-height:1.6;
+    }
+
+/* ---------- ACCOUNT ICON ---------- */
+#accountIcon {
+    position:absolute; right:24px; top:50%; transform:translateY(-50%);
+    width:40px; height:40px; border:none; border-radius:50%;
+    background:rgba(197,71,107,0.08); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:background 0.2s ease;
+}
+#accountIcon:hover { background:rgba(197,71,107,0.18); }
+#accountIcon svg { width:20px; height:20px; fill:#b5476b; }
+header { position:relative; }
+
+/* ---------- ACCOUNT MODAL ---------- */
+#accountModal {
+    position:fixed; inset:0; background:rgba(50,20,30,0.65); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:118;
+}
+#accountModal.show { display:flex; }
+.account-box {
+    background:#fff; width:min(400px,95%); border-radius:18px; padding:28px;
+    position:relative; box-shadow:0 15px 40px rgba(60,20,35,0.3);
+}
+.account-box h2 {
+    font-family:'Playfair Display', serif; color:#c76a8a; font-size:24px; margin:0 0 18px;
+}
+.account-label {
+    display:block; font-size:12px; font-weight:600; color:#8e2f4e; margin:4px 0 0;
+}
+.account-box input {
+    display:block; width:100%; height:42px; padding:9px 10px; margin:6px 0 14px;
+    border:1.5px solid #e3aebd; border-radius:8px; background:#fff;
+    font-family:'Poppins', sans-serif; font-size:14px; color:#555; outline:none; transition:0.2s ease;
+}
+.account-box input:focus { border-color:#c76a8a; box-shadow:0 0 0 2px rgba(199,106,138,0.08); }
+.account-submit {
+    width:100%; border:none; border-radius:25px; padding:12px; margin-top:8px;
+    background:#c76a8a; color:#fff; font-family:'Poppins', sans-serif; font-weight:600;
+    cursor:pointer; transition:0.2s ease;
+}
+.account-submit:hover { background:#b5476b; }
+.close-modal {
+    position:absolute; right:18px; top:14px; border:none; background:none;
+    color:#999; font-size:27px; cursor:pointer;
+}
+.close-modal:hover { color:#c76a8a; }
+#accountGreeting {
+    font-family:'Playfair Display', serif; color:#c76a8a; font-size:16px;
+    text-align:center; margin-top:16px;
+}
+    /* slide indicator dots */
+    #dots {
+        position:absolute;
+        bottom:18px; left:0; right:0;
+        display:flex;
+        justify-content:center;
+        gap:10px;
+        z-index:2;
+    }
+    #dots button {
+        width:9px; height:9px;
+        border-radius:50%;
+        border:none;
+        background:rgba(255,255,255,0.5);
+        cursor:pointer;
+        padding:0;
+        transition:background 0.2s ease, transform 0.2s ease;
+    }
+    #dots button.active {
+        background:#fff;
+        transform:scale(1.3);
+    }
+
+    /* ---------- about strip ---------- */
+    #about {
+        text-align:center;
+        padding:50px 20px;
+        max-width:700px;
+        margin:0 auto;
+    }
+    #about h2 {
+        font-family:'Playfair Display', serif;
+        color:#b5476b;
+        font-size:28px;
+        margin-bottom:14px;
+    }
+    #about p {
+        font-size:14px;
+        line-height:1.8;
+        color:#5a3d47;
+    }
+/* ---------- divider ---------- */
+hr {
+    width:300px;
+    height:3px;
+    border:none;
+    border-radius:3px;
+    background:#e3aebd;
+    margin:0 auto 40px auto;
+}
+    /* ---------- quick links / cards ---------- */
+    #quicklinks {
+        display:grid;
+        grid-template-columns:repeat(3, 1fr);
+        gap:24px;
+        padding:10px 30px 60px 30px;
+        max-width:1100px;
+        margin:0 auto;
+    }
+    .card {
+        display:block;
+        background:#fff;
+        border-radius:16px;
+        padding:30px 20px;
+        text-align:center;
+        box-shadow:0 4px 10px rgba(219,112,147,0.15);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform:scale(1.03);
+        box-shadow:0 10px 22px rgba(219,112,147,0.3);
+    }
+    .card .icon {
+        width:46px; height:46px;
+        margin:0 auto 14px auto;
+        fill:#c76a8a;
+        transition: fill 0.3s ease;
+    }
+    .card:hover .icon {
+        fill:#c84e79;
+    }
+    .card h3 {
+        font-family:'Playfair Display', serif;
+        color:#c76a8a;
+        font-size:19px;
+        margin-bottom:8px;
+        transition: color 0.3s ease;
+    }
+    .card:hover h3 {
+        color:#c84e79;
+    }
+    .card p {
+        font-size:13px;
+        color:#5a3d47;
+        line-height:1.6;
+    }
+
+    /* ---------- CUSTOMER REVIEWS ---------- */
+#reviews {
+    max-width:700px; margin:0 auto 60px; padding:0 20px;
+}
+#reviews h2 {
+    font-family:'Playfair Display', serif; color:#b5476b; font-size:28px;
+    text-align:center; margin-bottom:24px;
+}
+.review-form {
+    background:#fff; border-radius:16px; padding:24px; margin-bottom:24px;
+    box-shadow:0 4px 10px rgba(219,112,147,0.15);
+}
+.review-form input, .review-form textarea {
+    width:100%; padding:10px 12px; margin-bottom:12px;
+    border:1.5px solid #e3aebd; border-radius:8px;
+    font-family:'Poppins', sans-serif; font-size:14px; color:#5a3d47;
+    resize:vertical;
+}
+.review-form input:focus, .review-form textarea:focus {
+    outline:none; border-color:#c76a8a;
+}
+.review-form button {
+    border:none; border-radius:25px; padding:11px 22px; background:#c76a8a; color:#fff;
+    font-family:'Poppins', sans-serif; font-weight:600; cursor:pointer; transition:0.2s ease;
+}
+.review-form button:hover { background:#b5476b; }
+
+.review-card {
+    background:#fff; border-radius:14px; padding:18px 20px; margin-bottom:14px;
+    box-shadow:0 4px 10px rgba(219,112,147,0.1);
+}
+.review-card strong { font-family:'Playfair Display', serif; color:#c76a8a; }
+.review-card p { font-size:14px; line-height:1.6; margin:6px 0 0; }
+.review-empty { text-align:center; color:#b997a3; font-size:14px; padding:20px 0; }
+
+.review-upload-label {
+    display:block; font-size:12px; font-weight:600; color:#8e2f4e; margin-bottom:6px;
+}
+.review-form input[type="file"] {
+    width:100%; padding:8px; margin-bottom:10px;
+    border:1.5px dashed #e3aebd; border-radius:8px;
+    font-family:'Poppins', sans-serif; font-size:13px; color:#5a3d47; background:#fdeef0;
+}
+#reviewPreview img {
+    max-width:120px; max-height:120px; object-fit:cover;
+    border-radius:8px; margin-bottom:12px; display:block;
+}
+.review-card img {
+    max-width:100%; max-height:220px; object-fit:cover;
+    border-radius:10px; margin-top:10px; display:block;
+}
+
+    /* ---------- back to top button ---------- */
+#backToTop {
+    position:fixed;
+    bottom:24px;
+    right:24px;
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    background:#ca4f78;
+    border:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow:0 4px 12px rgba(90,20,45,0.35);
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(10px);
+    transition:opacity 0.3s ease, transform 0.3s ease, background 0.2s ease;
+    z-index:20;
+}
+#backToTop.show {
+    opacity:1;
+    visibility:visible;
+    transform:translateY(0);
+}
+#backToTop:hover { background:#b5476b; }
+#backToTop svg { width:20px; height:20px; fill:#fff; }
+
+    /* ---------- footer ---------- */
+    footer {
+        background:#8e2f4e;
+        color:#f6dde3;
+        text-align:center;
+        padding:34px 20px 20px 20px;
+    }
+    footer .social {
+        display:flex;
+        justify-content:center;
+        gap:18px;
+        margin-bottom:16px;
+    }
+    footer .social a {
+        width:38px; height:38px;
+        border-radius:50%;
+        background:rgba(255,255,255,0.12);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        transition: background 0.2s ease;
+    }
+    footer .social a:hover { background:#c76a8a; }
+    footer .social svg { width:18px; height:18px; fill:#fff; }
+    footer p { font-size:12px; opacity:0.85; }
+
+    /* ---------- responsive ---------- */
+    @media (max-width:800px) {
+        #quicklinks { grid-template-columns:1fr; }
+        #hero-overlay h1 { font-size:38px; }
+    }
+    @media (max-width:600px) {
+        #hero { max-height:260px; }
+    }
+</style>
+</head>
+
+<body>
+
+<!-- promo marquee -->
+<div id="promo">
+    <div class="promo-track">
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+
+        <!-- duplicate set: keeps the loop seamless, don't remove -->
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+    </div>
+</div>
+
+<!-- header / navigation -->
+<header>
+    <div id="logo">Brieselle Atelier</div>
+
+    <button id="accountIcon" aria-label="Open account" onclick="openAccount()">
+        <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></svg>
+    </button>
+</header>
+
+<!-- hero banner slideshow -->
+<div id="hero">
+
+    <!-- To add or remove slides, just copy/paste or delete one .slide block below.
+         The FIRST slide must keep the "active" class - the rest should not have it. -->
+
+    <div class="slide active">
+        <img src="images/4.jpg" alt="Dress collection banner 1">
+    </div>
+
+    <div class="slide">
+        <img src="images/6.png" alt="Dress collection banner 2">
+    </div>
+
+    <div class="slide">
+        <img src="images/12.png" alt="Dress collection banner 3">
+    </div>
+
+    <div id="hero-overlay">
+        <h1>Your fairytale begins here</h1>
+        <p>Elegant dresses for every special occasion &mdash; weddings, debuts, graduations, and everything worth dressing up for.</p>
+    </div>
+
+    <div id="dots"></div>
+
+</div>
+
+<script>
+    // builds the slideshow automatically from however many .slide elements exist,
+    // so adding/removing slide blocks above just works without touching this script
+    const slides = document.querySelectorAll('#hero .slide');
+    const dotsWrap = document.getElementById('dots');
+    let current = 0;
+
+    slides.forEach((slide, i) => {
+        const dot = document.createElement('button');
+        if (i === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => goToSlide(i));
+        dotsWrap.appendChild(dot);
+    });
+    const dots = document.querySelectorAll('#dots button');
+
+    function goToSlide(index) {
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        current = index;
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
+    }
+
+    setInterval(() => {
+        goToSlide((current + 1) % slides.length);
+    }, 4000); // change slide every 4 seconds
+</script>
+
+<!-- short about blurb -->
+<div id="about">
+    <h2>Dress Pretty, Feel Beautiful</h2>
+    <p>Find a dress made for your moment. Brieselle Atelier offers a curated collection of short dresses and maxi dresses in sizes small to large, so you can look your best on every occasion. Pick your favorite, place your order, and wear it with confidence!</p>
+</div>
+<hr>
+<!-- quick link cards -->
+<div id="quicklinks">
+
+    <a href="ecom catalog.html" class="card">
+        <h3>Catalog</h3>
+        <p>Browse our full collection of dresses with sizes, colors, prices, and details.</p>
+    </a>
+
+    <a href="ecom size guide.html" class="card">
+        <h3>Size Guide</h3>
+        <p>Find your perfect fit with our simple size guide and measurement tips.</p>
+    </a>
+
+    <a href="ecom about us.html" class="card">
+        <h3>About Us</h3>
+        <p>Learn more about Brieselle Atelier, our story, and our love for beautiful dresses.</p>
+    </a>
+
+</div>
+
+<!-- customer reviews -->
+<div id="reviews">
+    <h2>Customer Reviews</h2>
+
+    <form class="review-form" id="reviewForm">
+        <input type="text" id="reviewName" placeholder="Your name" required>
+        <textarea id="reviewText" rows="4" placeholder="Share your experience with us..." required></textarea>
+
+        <label class="review-upload-label" for="reviewPhoto">
+            Add a photo (optional)
+        </label>
+        <input type="file" id="reviewPhoto" accept="image/*">
+        <div id="reviewPreview"></div>
+
+        <button type="submit">Submit Review</button>
+    </form>
+
+    <div id="reviewList"></div>
+</div>
+
+<!-- ================= ACCOUNT MODAL ================= -->
+<div id="accountModal">
+    <div class="account-box">
+        <button class="close-modal" onclick="closeAccount()">×</button>
+        <h2 id="accountTitle">Create Account</h2>
+
+        <form id="accountForm">
+            <label class="account-label">User Name</label>
+            <input type="text" id="accName" placeholder="Enter your username" required>
+
+            <label class="account-label">Password</label>
+            <input type="password" id="accPwd" placeholder="Enter your password" required>
+
+            <label class="account-label">Zip Code</label>
+            <input type="text" id="accZip" placeholder="e.g. 4116" maxlength="5" required>
+
+            <button type="submit" class="account-submit">Sign Up</button>
+        </form>
+
+        <p id="accountGreeting" hidden></p>
+    </div>
+</div>
+
+<!-- footer -->
+<footer>
+    <!-- back to top button -->
+<button id="backToTop" aria-label="Back to top">
+    <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+</button>
+    <div class="social">
+        <a href="https://facebook.com/YOUR_PAGE" target="_blank" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7H7.9V12h2.6V9.8c0-2.6 1.5-4 3.9-4 1.1 0 2.3.2 2.3.2v2.5h-1.3c-1.3 0-1.7.8-1.7 1.6V12h2.9l-.5 2.9h-2.4v7A10 10 0 0 0 22 12"/></svg>
+        </a>
+        <a href="https://instagram.com/YOUR_PAGE" target="_blank" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2.1 1.9.2 2.4.4.6.2 1 .5 1.5 1 .4.4.7.8 1 1.5.2.5.3 1.2.4 2.4.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.2-.2 1.9-.4 2.4-.2.6-.5 1-1 1.5-.4.4-.8.7-1.5 1-.5.2-1.2.3-2.4.4-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2-.1-1.9-.2-2.4-.4-.6-.2-1-.5-1.5-1-.4-.4-.7-.8-1-1.5-.2-.5-.3-1.2-.4-2.4C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8c.1-1.2.2-1.9.4-2.4.2-.6.5-1 1-1.5.4-.4.8-.7 1.5-1 .5-.2 1.2-.3 2.4-.4C8.4 2.2 8.8 2.2 12 2.2m0-2.2C8.7 0 8.3 0 7 .1c-1.3.1-2.2.3-3 .6-.8.3-1.5.7-2.2 1.4C1.1 2.8.7 3.5.4 4.3c-.3.8-.5 1.7-.6 3C-.2 8.6 0 9 0 12s0 3.4.1 4.7c.1 1.3.3 2.2.6 3 .3.8.7 1.5 1.4 2.2.7.7 1.4 1.1 2.2 1.4.8.3 1.7.5 3 .6C8.3 24 8.7 24 12 24s3.4 0 4.7-.1c1.3-.1 2.2-.3 3-.6.8-.3 1.5-.7 2.2-1.4.7-.7 1.1-1.4 1.4-2.2.3-.8.5-1.7.6-3 .1-1.3.1-1.7.1-4.7s0-3.4-.1-4.7c-.1-1.3-.3-2.2-.6-3-.3-.8-.7-1.5-1.4-2.2C21.2 1.1 20.5.7 19.7.4c-.8-.3-1.7-.5-3-.6C15.4 0 15 0 12 0Zm0 5.8A6.2 6.2 0 1 0 18.2 12 6.2 6.2 0 0 0 12 5.8m0 10.2A4 4 0 1 1 16 12a4 4 0 0 1-4 4Zm6.4-10.4a1.4 1.4 0 1 1-1.4-1.4 1.4 1.4 0 0 1 1.4 1.4Z"/></svg>
+        </a>
+    </div>
+    <p>&copy; 2026 Brieselle Atelier. All rights reserved.</p>
+</footer>
+<script>
+
+    let account = null;
+
+    function openAccount() {
+        document.getElementById("accountModal").classList.add("show");
+    }
+
+    function closeAccount() {
+        document.getElementById("accountModal").classList.remove("show");
+    }
+
+    document.getElementById("accountForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById("accName").value.trim();
+        const zip = document.getElementById("accZip").value.trim();
+
+        account = { name, zip };
+
+        document.getElementById("accountForm").reset();
+        document.getElementById("accountTitle").textContent = "Welcome!";
+        const greeting = document.getElementById("accountGreeting");
+        greeting.hidden = false;
+        greeting.textContent = `You're signed in as ${name} (Zip: ${zip})`;
+    });
+
+    document.getElementById("accountModal").addEventListener("click", function (e) {
+        if (e.target === this) closeAccount();
+    });
+
+    const backToTopBtn = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            backToTopBtn.classList.add('show');
+        } else {
+            backToTopBtn.classList.remove('show');
+        }
+    });
+
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    let reviews = [];
+    let currentPhoto = null;
+
+    const reviewForm = document.getElementById('reviewForm');
+    const reviewList = document.getElementById('reviewList');
+    const reviewPhotoInput = document.getElementById('reviewPhoto');
+    const reviewPreview = document.getElementById('reviewPreview');
+
+    reviewPhotoInput.addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) {
+            currentPhoto = null;
+            reviewPreview.innerHTML = "";
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            currentPhoto = e.target.result;
+            reviewPreview.innerHTML = `<img src="${currentPhoto}" alt="Review photo preview">`;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    function renderReviews() {
+        if (!reviews.length) {
+            reviewList.innerHTML = "<p class='review-empty'>No reviews yet. Be the first to share!</p>";
+            return;
+        }
+
+        reviewList.innerHTML = reviews.map(r => `
+            <div class="review-card">
+                <strong>${r.name}</strong>
+                <p>${r.text}</p>
+                ${r.photo ? `<img src="${r.photo}" alt="Photo from ${r.name}">` : ""}
+            </div>
+        `).join('');
+    }
+
+    reviewForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById('reviewName').value.trim();
+        const text = document.getElementById('reviewText').value.trim();
+
+        if (!name || !text) return;
+
+        reviews.unshift({ name, text, photo: currentPhoto });
+
+        reviewForm.reset();
+        reviewPreview.innerHTML = "";
+        currentPhoto = null;
+
+        renderReviews();
+    });
+
+    renderReviews();
+
+</script>
+</body>
+</html>

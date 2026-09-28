@@ -1,0 +1,1840 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Shop</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Playfair+Display:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Poppins', sans-serif; margin:0; padding:0; background:#fdeef0; }
+
+/* ---------- TOP BAR ---------- */
+#topbar { background:#8e2f4e; height:0px; }
+
+/* ---------- PROMO MARQUEE ---------- */
+#promo {
+    background:#8e2f4e;
+    color:#fff;
+    height:38px;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+}
+.promo-track {
+    display:flex;
+    width:max-content;
+    animation:promoScroll 30s linear infinite;
+}
+.promo-track span {
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.5px;
+    padding:0 40px;
+    white-space:nowrap;
+}
+#promo:hover .promo-track { animation-play-state:paused; }
+
+@keyframes promoScroll {
+    from { transform:translateX(0); }
+    to   { transform:translateX(-50%); }
+}
+
+@media (prefers-reduced-motion:reduce) {
+    .promo-track { animation:none; }
+}
+
+/* ---------- HEADER ---------- */
+header {
+    position:relative; display:flex; justify-content:center; align-items:center;
+    gap:40px; flex-wrap:wrap; padding:60px 30px;
+    background:linear-gradient(180deg, rgba(90,20,45,0.45), rgba(90,20,45,0.55)), url("images/catalog header.png") center/cover no-repeat;
+}
+h1 { text-align:center; color:#fff; font-family:'Playfair Display', serif; margin:0; text-shadow:0 2px 6px rgba(0,0,0,0.25); }
+
+.header-hitbox {
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; object-position:center;
+    opacity:0; z-index:1; pointer-events:auto;
+}
+header { position:relative; }
+header nav {
+    position:relative; z-index:2;
+}
+header #headerIcons {
+    z-index:2;
+}
+/* ---------- NAVIGATION ---------- */
+nav ul { display:flex; gap:28px; list-style:none; margin:0; padding:0; }
+nav li { display:flex; }
+nav a {
+    position:relative; text-decoration:none; color:#fff; font-family:'Playfair Display', serif;
+    font-weight:700; font-size:17px; letter-spacing:0.5px; padding-bottom:4px;
+}
+nav a::after {
+    content:""; position:absolute; left:0; bottom:0; width:100%; height:2px; background:#fff;
+    transform:scaleX(0); transform-origin:right; transition:transform 0.3s ease;
+}
+nav a:hover::after { transform:scaleX(1); transform-origin:left; }
+
+/* ---------- TOP ACTIONS ROW (search + sort + wishlist + cart) ---------- */
+#topActionsRow {
+    display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:10px;
+    padding:10px 20px 6px; background:#fdeef0;
+}
+#iconGroup { display:flex; gap:10px; }
+#wishlistIcon, #cartIcon {
+    position:relative; width:44px; height:44px; border:none; border-radius:50%;
+    background:#fff; box-shadow:0 2px 6px rgba(219,112,147,0.25);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:background 0.2s ease;
+}
+#wishlistIcon:hover, #cartIcon:hover { background:#fdeef0; }
+#wishlistIcon svg, #cartIcon svg { width:22px; height:22px; fill:#c76a8a; }
+#wishlistCount, #cartCount {
+    position:absolute; top:-4px; right:-4px; min-width:20px; height:20px; padding:0 5px; border-radius:10px;
+    background:#fff; color:#8e2f4e; font-size:11px; font-weight:700; display:none; align-items:center; justify-content:center;
+}
+#wishlistCount.show, #cartCount.show { display:flex; }
+
+.wishlist-heart {
+    position:absolute;
+    top:8px; right:8px;
+    width:32px; height:32px;
+    border:none; border-radius:50%;
+    background:rgba(255,255,255,0.85);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    z-index:3;
+    transition:background 0.2s ease, transform 0.15s ease;
+}
+.wishlist-heart:hover { transform:scale(1.1); background:#fff; }
+.wishlist-heart svg {
+    width:18px; height:18px;
+    fill:none;
+    stroke:#c76a8a;
+    stroke-width:2;
+    transition:fill 0.2s ease;
+}
+.wishlist-heart.active svg { fill:#c76a8a; }
+
+/* ---------- PRODUCT GRID ---------- */
+#products { display:grid; grid-template-columns:repeat(6, 1fr); gap:20px; padding:20px 30px 40px 30px; }
+
+/* ---------- PRODUCT CARD ---------- */
+.product {
+    background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 4px 10px rgba(219,112,147,0.15);
+    text-align:center; transition:transform 0.3s ease, box-shadow 0.3s ease;
+}
+.product:hover { transform:scale(1.03); box-shadow:0 8px 18px rgba(219,112,147,0.28); z-index:2; position:relative; }
+.imgwrap { position:relative; width:100%; aspect-ratio:1/1; overflow:hidden; }
+.imgwrap img { width:100%; height:100%; object-fit:cover; display:block; }
+.dressname { font-family:'Playfair Display', serif; font-size:24px; color:#c76a8a; margin:12px 0 3px 0; line-height:1.2; }
+.price { font-family:'Playfair Display', serif; color:#c76a8a; font-size:21px; margin:0 0 6px 0; }
+.price del {
+    color:#b997a3;
+    font-size:15px;
+    font-weight:400;
+    text-decoration:line-through;
+    margin-right:6px;
+}
+.price ins {
+    color:#c76a8a;
+    font-family:'Playfair Display', serif;
+    font-size:21px;
+    text-decoration:none;
+}
+.modal-price del {
+    color:#b997a3;
+    font-size:16px;
+    font-weight:400;
+    text-decoration:line-through;
+    margin-right:6px;
+}
+.modal-price ins {
+    color:#c76a8a;
+    text-decoration:none;
+}
+.stock { font-size:12px; color:#777; margin:0 0 13px 0; }
+.stock span { color:#c76a8a; font-weight:600; }
+
+/* ---------- PRODUCT BUTTONS ---------- */
+.product-buttons { display:flex; gap:7px; justify-content:center; padding:0 10px 16px; }
+.cart-btn, .buy-btn {
+    border-radius:20px; padding:8px 11px; font-family:'Poppins', sans-serif; font-size:11px;
+    font-weight:600; cursor:pointer; transition:0.2s ease;
+}
+.cart-btn { background:#fff; color:#c76a8a; border:1.5px solid #e3aebd; }
+.buy-btn { background:#c76a8a; color:#fff; border:1.5px solid #c76a8a; }
+.cart-btn:hover { background:#fdeef0; border-color:#c76a8a; }
+.buy-btn:hover { background:#b5476b; }
+
+/* ---------- MODALS ---------- */
+#productModal, #cartModal, #checkoutModal {
+    position:fixed; inset:0; background:rgba(50,20,30,0.65); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:100;
+}
+#cartModal { z-index:110; }
+#checkoutModal { z-index:120; }
+#productModal.show, #cartModal.show, #checkoutModal.show { display:flex; }
+
+#wishlistModal {
+    position:fixed; inset:0; background:rgba(50,20,30,0.65); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:115;
+}
+#wishlistModal.show { display:flex; }
+
+.modal-box {
+    background:#fff; width:min(850px,95%); max-height:90vh; overflow-y:auto; border-radius:18px; padding:25px;
+    position:relative; display:flex; gap:30px; align-items:center; box-shadow:0 15px 40px rgba(60,20,35,0.3);
+}
+.modal-image { width:45%; aspect-ratio:1/1; object-fit:cover; border-radius:12px; }
+.modal-info { flex:1; text-align:left; }
+.modal-info h2 { font-family:'Playfair Display', serif; color:#c76a8a; font-size:32px; margin:0 0 8px; }
+.modal-price { font-family:'Playfair Display', serif; color:#c76a8a; font-size:25px; margin:0 0 8px; }
+.modal-stock { font-size:13px; color:#777; margin-bottom:22px; }
+.quantity-label { font-weight:600; color:#555; font-size:14px; }
+
+#imageLightbox {
+    position:fixed; inset:0; background:rgba(30,10,20,0.85);
+    display:none; align-items:center; justify-content:center;
+    padding:30px; z-index:150; cursor:zoom-out;
+}
+#imageLightbox.show { display:flex; }
+#imageLightbox img {
+    max-width:90%; max-height:85vh; border-radius:12px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.4);
+}
+#imageLightbox .close-modal {
+    position:fixed; top:18px; right:22px; font-size:34px;
+}
+.imgwrap img {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><circle cx="10" cy="10" r="7" fill="none" stroke="%23c76a8a" stroke-width="2"/><line x1="15" y1="15" x2="21" y2="21" stroke="%23c76a8a" stroke-width="2" stroke-linecap="round"/><line x1="10" y1="7" x2="10" y2="13" stroke="%23c76a8a" stroke-width="1.5"/><line x1="7" y1="10" x2="13" y2="10" stroke="%23c76a8a" stroke-width="1.5"/></svg>') 10 10, zoom-in;
+}
+
+/* ---------- QUANTITY ---------- */
+.quantity-control { display:flex; align-items:center; margin:10px 0 22px; }
+.quantity-control button { width:38px; height:38px; border:1px solid #e3aebd; background:#fff; color:#c76a8a; font-size:20px; cursor:pointer; }
+.quantity-control button:first-child { border-radius:8px 0 0 8px; }
+.quantity-control button:last-child { border-radius:0 8px 8px 0; }
+#quantityInput {
+    width:55px; height:38px; border:1px solid #e3aebd; border-left:none; border-right:none;
+    text-align:center; font-family:'Poppins', sans-serif; font-weight:600; color:#555;
+}
+
+#searchbar { max-width:420px; width:100%; justify-self:center; }
+#dressSearch {
+    width:100%; padding:11px 18px; border:1.5px solid #e3aebd; border-radius:25px;
+    font-family:'Poppins', sans-serif; font-size:14px; color:#5a3d47; background:#fff;
+}
+#dressSearch::placeholder { color:#b997a3; }
+#dressSearch:focus { outline:none; border-color:#c76a8a; }
+
+/* ---------- SIZE OPTIONS ---------- */
+.size-options { display:flex; gap:8px; margin:10px 0 18px; }
+.size-btn {
+    flex:1; padding:9px 0; border:1.5px solid #e3aebd; background:#fff; color:#c76a8a;
+    border-radius:8px; font-family:'Poppins', sans-serif; font-weight:600; font-size:13px;
+    cursor:pointer; transition:0.2s ease;
+}
+.size-btn:hover { background:#fdeef0; }
+.size-btn.selected { background:#c76a8a; color:#fff; border-color:#c76a8a; }
+
+/* ---------- MODAL ACTION / CHECKOUT BUTTON ---------- */
+.modal-action, .checkout-btn {
+    width:100%; border:none; border-radius:25px; padding:12px; background:#c76a8a; color:white;
+    font-family:'Poppins', sans-serif; font-weight:600; cursor:pointer; transition:0.2s ease;
+}
+.modal-action:hover, .checkout-btn:hover { background:#b5476b; }
+
+/* ---------- CLOSE BUTTON ---------- */
+.close-modal { position:absolute; right:18px; top:14px; border:none; background:none; color:#999; font-size:27px; cursor:pointer; }
+.close-modal:hover { color:#c76a8a; }
+
+/* ---------- CART MODAL ---------- */
+.cart-box { background:white; width:min(550px,95%); max-height:85vh; overflow-y:auto; border-radius:18px; padding:28px; position:relative; }
+.cart-box h2 { font-family:'Playfair Display', serif; color:#c76a8a; margin-top:0; }
+.cart-item { display:flex; align-items:center; gap:12px; border-bottom:1px solid #f0dce2; padding:12px 0; }
+.cart-item img { width:65px; height:65px; object-fit:cover; border-radius:8px; }
+.cart-item-info { flex:1; }
+.cart-item-info strong { font-family:'Playfair Display', serif; color:#c76a8a; }
+.cart-item-info small { display:block; color:#777; }
+.cart-remove { border:none; background:none; color:#c76a8a; cursor:pointer; font-size:18px; }
+.cart-box fieldset { border:none; padding:0; margin:0; }
+.cart-box legend { font-size:13px; font-weight:600; color:#8e2f4e; margin-bottom:8px; }
+.cart-tools {
+    display:flex;
+    gap:8px;
+    margin-bottom:14px;
+}
+.cart-tool-btn {
+    flex:1;
+    border-radius:20px;
+    padding:8px 0;
+    font-family:'Poppins', sans-serif;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.2s ease;
+    background:#c76a8a;
+    color:#fff;
+    border:1.5px solid #c76a8a;
+}
+.cart-tool-btn:hover {
+    background:#b5476b;
+}
+.cart-tool-outline {
+    background:#fff;
+    color:#c76a8a;
+    border:1.5px solid #e3aebd;
+}
+.cart-tool-outline:hover {
+    background:#fdeef0;
+    border-color:#c76a8a;
+}
+.cart-total {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:'Playfair Display', serif;
+    font-size:20px;
+    font-weight:700;
+    color:#c76a8a;
+    padding:16px 0;
+    margin-top:6px;
+    border-top:1.5px solid #f0dce2;
+}
+.cart-empty {
+    text-align:center;
+    color:#b997a3;
+    font-size:14px;
+    padding:60px 10px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><path d="M20 33s-11-7-15-13C2 15 3 8 9 5c4-2 8 0 11 5 3-5 7-7 11-5 6 3 7 10 4 15-4 6-15 13-15 13z" fill="%23fdeef0"/></svg>') repeat;
+    background-size: 40px 40px;
+    border-radius: 12px;
+}
+.checkout-box { max-width:480px; }
+#checkoutModal .modal-box { max-height:80vh; padding:28px 25px 25px; }
+
+.checkout-field {
+    display:block;
+    width:100%;
+}
+
+/* ---------- CHECKOUT / CUSTOMER INFORMATION ---------- */
+
+.checkout-box {
+    max-width:480px;
+}
+
+.checkout-box .modal-info {
+    width:100%;
+    min-width:0;
+}
+
+.checkout-box form {
+    display:flex;
+    flex-direction:column;
+    gap:0;
+}
+
+/* ---------- LABELS ---------- */
+
+.checkout-box .quantity-label {
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    color:#8e2f4e;
+    margin:4px 0 0;
+}
+
+/* ---------- TEXT INPUTS ---------- */
+
+.checkout-box input[type="text"],
+.checkout-box input[type="tel"],
+.checkout-box input[type="email"] {
+    display:block;
+    width:100%;
+    height:42px;
+    padding:9px 10px;
+    margin:6px 0 14px;
+
+    border:1.5px solid #e3aebd;
+    border-radius:8px;
+    background:#fff;
+
+    font-family:'Poppins', sans-serif;
+    font-size:14px;
+    color:#555;
+
+    outline:none;
+    transition:0.2s ease;
+}
+
+.checkout-box input::placeholder {
+    color:#b997a3;
+}
+
+.checkout-box input:hover {
+    border-color:#c76a8a;
+}
+
+.checkout-box input:focus {
+    outline:none;
+    border-color:#c76a8a;
+    box-shadow:0 0 0 2px rgba(199,106,138,0.08);
+}
+/* ---------- AUTOFILL OVERRIDE ---------- */
+.checkout-box input:-webkit-autofill,
+.checkout-box input:-webkit-autofill:hover,
+.checkout-box input:-webkit-autofill:focus {
+    -webkit-text-fill-color:#555;
+    -webkit-box-shadow:0 0 0px 1000px #fdeef0 inset;
+    box-shadow:0 0 0px 1000px #fdeef0 inset;
+    transition:background-color 5000s ease-in-out 0s;
+}
+
+#checkoutModal .modal-box {
+    align-items:flex-start;
+}
+
+/* ---------- DROPDOWN BOX ---------- */
+
+.custom-select-wrap { position:relative; margin:6px 0 14px; }
+
+.custom-select-trigger {
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    width:100%; height:42px; padding:9px 12px;
+    border:1.5px solid #e3aebd; border-radius:8px; background:#fff;
+    font-family:'Poppins', sans-serif; font-size:14px; color:#555;
+    text-align:left; cursor:pointer; transition:0.2s ease;
+}
+.custom-select-trigger:hover { border-color:#c76a8a; }
+.custom-select-wrap.open .custom-select-trigger,
+.custom-select-trigger:focus { outline:none; border-color:#c76a8a; box-shadow:0 0 0 2px rgba(199,106,138,0.08); }
+.custom-select-value.placeholder { color:#b997a3; }
+.custom-select-trigger:disabled { background:#f6ecef; color:#b997a3; cursor:not-allowed; }
+
+.custom-select-arrow { width:16px; height:16px; color:#c76a8a; flex-shrink:0; transition:transform 0.2s ease; }
+.custom-select-wrap.open .custom-select-arrow { transform:rotate(180deg); }
+
+.custom-select-options {
+    list-style:none; margin:6px 0 0; padding:6px;
+    position:absolute; left:0; right:0; top:100%; z-index:30;
+    max-height:220px; overflow-y:auto;
+    background:#fff; border:1.5px solid #e3aebd; border-radius:10px;
+    box-shadow:0 8px 18px rgba(219,112,147,0.28);
+}
+.custom-select-options[hidden] { display:none; }
+.custom-select-options li {
+    padding:8px 10px; border-radius:6px; font-size:14px; color:#555; cursor:pointer;
+}
+.custom-select-options li:hover,
+.custom-select-options li.active { background:#fdeef0; color:#8e2f4e; }
+.custom-select-options li.selected { background:#c76a8a; color:#fff; }
+
+.native-select { position:absolute; inset:0; opacity:0; pointer-events:none; }
+
+/* ---------- DROPDOWN OPTIONS ---------- */
+
+.checkout-box select option {
+    color:#555;
+    background:#fff;
+    font-family:'Poppins', sans-serif;
+    font-size:14px;
+    padding:8px 10px;
+}
+
+.checkout-box select option:checked {
+    background:#c76a8a;
+    color:#fff;
+}
+
+
+/* ---------- ERROR MESSAGE ---------- */
+
+.field-error {
+    color:#b5476b;
+    font-size:12px;
+    margin:-10px 0 14px;
+}
+
+/* ---------- CONFIRM / SUCCESS MINI MODALS ---------- */
+#confirmModal, #successModal {
+    position:fixed; inset:0; background:rgba(50,20,30,0.65); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:130;
+}
+#confirmModal.show, #successModal.show { display:flex; }
+
+.mini-box {
+    background:#fff; width:min(360px,95%); border-radius:18px; padding:32px 28px 28px;
+    text-align:center; box-shadow:0 15px 40px rgba(60,20,35,0.3);
+}
+.mini-icon {
+    width:56px; height:56px; margin:0 auto 16px; border-radius:50%;
+    background:#fdeef0; color:#c76a8a; font-family:'Playfair Display', serif;
+    font-size:28px; font-weight:700; display:flex; align-items:center; justify-content:center;
+}
+.key-hint {
+    display:inline-block; min-width:24px; padding:2px 8px; margin:0 2px;
+    background:#fdeef0; color:#c76a8a; border:1.5px solid #e3aebd; border-radius:6px;
+    font-family:'Poppins', sans-serif; font-weight:700; font-size:13px;
+}
+.mini-icon-success { background:#c76a8a; color:#fff; }
+
+.mini-box h3 {
+    font-family:'Playfair Display', serif; color:#c76a8a; font-size:22px; margin:0 0 8px;
+}
+.mini-box p { font-size:13px; color:#777; margin:0 0 22px; line-height:1.5; }
+
+.mini-actions { display:flex; gap:10px; }
+.mini-btn {
+    flex:1; border-radius:25px; padding:11px; font-family:'Poppins', sans-serif;
+    font-weight:600; font-size:13px; cursor:pointer; transition:0.2s ease; border:1.5px solid transparent;
+}
+.mini-btn-solid { background:#c76a8a; color:#fff; border-color:#c76a8a; }
+.mini-btn-solid:hover { background:#b5476b; }
+.mini-btn-outline { background:#fff; color:#c76a8a; border-color:#e3aebd; }
+.mini-btn-outline:hover { background:#fdeef0; border-color:#c76a8a; }
+
+/* ---------- SORT TOGGLE BUTTON ---------- */
+#sortToggle {
+    flex-shrink:0; position:relative; z-index:15;
+    background:#fff; color:#c76a8a; border:1.5px solid #e3aebd;
+    border-radius:20px; padding:9px 16px; font-family:'Poppins', sans-serif;
+    font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;
+    box-shadow:0 4px 12px rgba(219,112,147,0.2); transition:0.2s ease;
+}
+#sortToggle:hover { background:#fdeef0; border-color:#c76a8a; }
+#sortToggle svg { width:15px; height:15px; }
+
+/* ---------- CATEGORY FILTER PANEL ---------- */
+#categoryFilter {
+    position:absolute; top:calc(100% + 8px); left:0; z-index:15;
+    background:#fff; border-radius:14px; padding:16px 18px;
+    box-shadow:0 4px 12px rgba(219,112,147,0.25);
+    font-family:'Poppins', sans-serif; width:170px;
+    display:none;
+}
+
+#categoryFilter.show { display:block; }
+#categoryFilter h4 {
+    font-family:'Playfair Display', serif; color:#c76a8a; font-size:15px; margin:0 0 10px;
+}
+#categoryFilter label {
+    display:flex; align-items:center; gap:8px; font-size:13px; color:#555; margin-bottom:8px; cursor:pointer;
+}
+#categoryFilter input[type="checkbox"] { accent-color:#c76a8a; }
+#categoryFilter .filter-divider { border-top:1px solid #f0dce2; margin:10px 0; }
+
+@media (max-width:900px) {
+    #sortToggle { position:static; margin:16px 20px 0; }
+    #categoryFilter { position:static; width:auto; margin:10px 20px 0; }
+}
+
+/* ---------- FOOTER ---------- */
+footer { background:#8e2f4e; color:#f6dde3; text-align:center; padding:34px 20px 20px 20px; }
+footer .social { display:flex; justify-content:center; gap:18px; margin-bottom:16px; }
+footer .social a {
+    width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,0.12);
+    display:flex; align-items:center; justify-content:center; transition:background 0.2s ease;
+}
+footer .social a:hover { background:#c76a8a; }
+footer .social svg { width:18px; height:18px; fill:#fff; }
+footer p { font-size:12px; opacity:0.85; }
+
+/* keeps the footer at the bottom, even when the grid is empty */
+body { min-height:100vh; display:flex; flex-direction:column; }
+footer { margin-top:auto; }
+
+/* body is now a flex column, so the search bar needs an explicit width */
+#searchbar { width:100%; }
+
+/* ---------- NO RESULTS ---------- */
+#noResults { text-align:center; padding:40px 20px 60px; }
+#noResults .nr-title {
+    font-family:'Playfair Display', serif; color:#c76a8a;
+    font-size:26px; margin:0 0 6px;
+}
+#noResults .nr-hint { font-family:'Poppins', sans-serif; color:#8e2f4e; font-size:13px; margin:0; }
+
+/* ---------- BACK TO TOP ---------- */
+#backToTop {
+    position:fixed; bottom:24px; right:24px; width:48px; height:48px; border-radius:50%; background:#ca4f78;
+    border:none; display:flex; align-items:center; justify-content:center; cursor:pointer;
+    box-shadow:0 4px 12px rgba(90,20,45,0.35); opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity 0.3s ease, transform 0.3s ease, background 0.2s ease; z-index:20;
+}
+#backToTop.show { opacity:1; visibility:visible; transform:translateY(0); }
+#backToTop:hover { background:#b5476b; }
+#backToTop svg { width:20px; height:20px; fill:#fff; }
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:1100px) { #products { grid-template-columns:repeat(3,1fr); } }
+
+@media (max-width:600px) {
+    #products { grid-template-columns:repeat(2,1fr); gap:14px; padding:14px; }
+    header { gap:16px; }
+    nav ul { gap:16px; }
+    .dressname { font-size:19px; }
+    .price { font-size:18px; }
+    .product-buttons { flex-direction:column; }
+    .modal-box { flex-direction:column; gap:15px; padding:20px; }
+    .modal-image { width:70%; }
+    .modal-info { width:100%; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- PROMO MARQUEE -->
+<div id="promo">
+    <div class="promo-track">
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+
+        <!-- duplicate set: keeps the loop seamless, don't remove -->
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+        <span>✦ Get 10% OFF on your first order! ✦</span>
+    </div>
+</div>
+
+<div id="topbar"></div>
+
+<header>
+    <img src="images/catalog header.png" alt="" class="header-hitbox" usemap="#dresses">
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="ecom size guide.html">Size Guide</a></li>
+            <li><a href="ecom about us.html">About Us</a></li>
+        </ul>
+    </nav>
+
+    <!-- CART ICON -->
+    <map name="dresses">
+        <area shape="rect" coords="0,0,158,247" href="javascript:void(0)" onclick="buyFromBanner('Zoe')" alt="Zoe" title="Zoe">
+        <area shape="rect" coords="158,0,316,247" href="javascript:void(0)" onclick="buyFromBanner('Dahlia')" alt="Dahlia" title="Dahlia">
+        <area shape="rect" coords="316,0,474,247" href="javascript:void(0)" onclick="buyFromBanner('Ajalina')" alt="Ajalina" title="Ajalina">
+        <area shape="rect" coords="474,0,632,247" href="javascript:void(0)" onclick="buyFromBanner('Sandra')" alt="Sandra" title="Sandra">
+        <area shape="rect" coords="632,0,790,247" href="javascript:void(0)" onclick="buyFromBanner('Nicole')" alt="Nicole" title="Nicole">
+        <area shape="rect" coords="790,0,947,247" href="javascript:void(0)" onclick="buyFromBanner('Eloise')" alt="Eloise" title="Eloise">
+        <area shape="rect" coords="947,0,1105,247" href="javascript:void(0)" onclick="buyFromBanner('Camelia')" alt="Camelia" title="Camelia">
+        <area shape="rect" coords="1105,0,1263,247" href="javascript:void(0)" onclick="buyFromBanner('Celine')" alt="Celine" title="Celine">
+        <area shape="rect" coords="1263,0,1421,247" href="javascript:void(0)" onclick="buyFromBanner('Serina')" alt="Serina" title="Serina">
+        <area shape="rect" coords="1421,0,1578,247" href="javascript:void(0)" onclick="buyFromBanner('Gisella')" alt="Gisella" title="Gisella">
+        <area shape="rect" coords="1578,0,1736,247" href="javascript:void(0)" onclick="buyFromBanner('Odessa')" alt="Odessa" title="Odessa">
+        <area shape="rect" coords="1736,0,1894,247" href="javascript:void(0)" onclick="buyFromBanner('Gisella')" alt="Gisella" title="Gisella">
+    </map>
+</header>
+
+<div id="topActionsRow">
+
+    <div style="position:relative;">
+    <button id="sortToggle" onclick="toggleSortPanel()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#c76a8a" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+        Sort
+    </button>
+
+    <div id="categoryFilter">
+    <h4>Filter</h4>
+    <label><input type="checkbox" class="filter-type" value="maxi"> Maxi Dress</label>
+    <label><input type="checkbox" class="filter-type" value="short"> Short Dress</label>
+    <div class="filter-divider"></div>
+    <label><input type="checkbox" class="filter-price" value="below"> Below ₱500</label>
+    <label><input type="checkbox" class="filter-price" value="above"> ₱500 & Above</label>
+    </div>
+    </div>
+
+    <div id="searchbar">
+        <input id="dressSearch" type="search" placeholder="Search dresses, e.g. Scarlet"
+               autocomplete="off" aria-label="Search dresses">
+    </div>
+
+    <div id="iconGroup">
+        <button id="wishlistIcon" aria-label="Open wishlist" onclick="openWishlist()">
+            <svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1 10.1 1.5 6.5 4.6 5 7 3.9 9.5 5 12 7.7 14.5 5 17 3.9 19.4 5c3.1 1.5 3.6 5.1 1.9 7.9C18.7 16.65 12 21 12 21z"/></svg>
+            <span id="wishlistCount">0</span>
+        </button>
+        <button id="cartIcon" aria-label="Open cart" onclick="openCart()">
+            <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1.003 1.003 0 0 0 20 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            <span id="cartCount">0</span>
+        </button>
+    </div>
+</div>
+
+<!-- ================= PRODUCTS ================= -->
+<div id="products">
+
+    <!-- 1 -->
+    <div class="product" data-name="Scarlet" data-price="400" data-stock="5" data-image="images/1.jpg" data-type="short">
+        <div class="imgwrap"><img src="images/1.jpg" alt="Scarlet dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Scarlet</p>
+        <p class="price">₱400</p>
+        <p class="stock">Stock: <span>5</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="product" data-name="Eloise" data-price="450" data-stock="8" data-image="images/2.png" data-type="short">
+        <div class="imgwrap"><img src="images/2.png" alt="Eloise dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Eloise</p>
+        <p class="price">₱450</p>
+        <p class="stock">Stock: <span>8</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="product" data-name="Valerie" data-price="450" data-stock="6" data-image="images/3.png" data-type="short">
+        <div class="imgwrap"><img src="images/3.png" alt="Valerie dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Valerie</p>
+        <p class="price">₱450</p>
+        <p class="stock">Stock: <span>6</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="product" data-name="Zoe" data-price="550" data-stock="4" data-image="images/4.jpg" data-type="short">
+        <div class="imgwrap"><img src="images/4.jpg" alt="Zoe dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Zoe</p>
+        <p class="price">₱550</p>
+        <p class="stock">Stock: <span>4</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="product" data-name="Odessa" data-price="600" data-stock="7" data-image="images/5.png" data-type="maxi">
+        <div class="imgwrap"><img src="images/5.png" alt="Odessa dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Odessa</p>
+        <p class="price">₱600</p>
+        <p class="stock">Stock: <span>7</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="product" data-name="Camelia" data-price="550" data-stock="5" data-image="images/6.png" data-type="short">
+        <div class="imgwrap"><img src="images/6.png" alt="Camelia dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Camelia</p>
+        <p class="price">₱550</p>
+        <p class="stock">Stock: <span>5</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="product" data-name="Gesilla" data-price="600" data-stock="3" data-image="images/7.jpg" data-type="maxi">
+        <div class="imgwrap"><img src="images/7.jpg" alt="Gesilla dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Gesilla</p>
+        <p class="price">₱600</p>
+        <p class="stock">Stock: <span>3</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="product" data-name="Camille" data-price="500" data-stock="6" data-image="images/8.jpg" data-type="short">
+        <div class="imgwrap"><img src="images/8.jpg" alt="Camille dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Camille</p>
+        <p class="price">₱500</p>
+        <p class="stock">Stock: <span>6</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="product" data-name="Dahlia" data-price="550" data-stock="5" data-image="images/9.png" data-type="short">
+        <div class="imgwrap"><img src="images/9.png" alt="Dahlia dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Dahlia</p>
+        <p class="price">₱550</p>
+        <p class="stock">Stock: <span>5</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="product" data-name="Lilibelle" data-price="500" data-stock="4" data-image="images/10.jpg" data-type="short">
+        <div class="imgwrap"><img src="images/10.jpg" alt="Lilibelle dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Lilibelle</p>
+        <p class="price">₱500</p>
+        <p class="stock">Stock: <span>4</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 11 -->
+    <div class="product" data-name="Alexa" data-price="500" data-stock="5" data-image="images/11.jpg" data-type="short">
+        <div class="imgwrap"><img src="images/11.jpg" alt="Alexa dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Alexa</p>
+        <p class="price">₱500</p>
+        <p class="stock">Stock: <span>5</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 12 -->
+    <div class="product" data-name="Ajalina" data-price="500" data-stock="4" data-image="images/12.png" data-type="short">
+        <div class="imgwrap"><img src="images/12.png" alt="Ajalina dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Ajalina</p>
+        <p class="price">₱500</p>
+        <p class="stock">Stock: <span>4</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 13 -->
+    <div class="product" data-name="Kimberly" data-price="500" data-stock="6" data-image="images/13.jpe" data-type="maxi">
+        <div class="imgwrap"><img src="images/13.jpe" alt="Kimberly dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Kimberly</p>
+        <p class="price">₱500</p>
+        <p class="stock">Stock: <span>6</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 14 -->
+    <div class="product" data-name="Colette" data-price="400" data-stock="5" data-image="images/14.png" data-type="short">
+        <div class="imgwrap"><img src="images/14.png" alt="Colette dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Colette</p>
+        <p class="price">₱400</p>
+        <p class="stock">Stock: <span>5</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 15 -->
+    <div class="product" data-name="Celine" data-price="500" data-stock="7" data-image="images/15.jpg" data-type="short">
+        <div class="imgwrap"><img src="images/15.jpg" alt="Celine dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Celine</p>
+        <p class="price">₱500</p>
+        <p class="stock">Stock: <span>7</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 16 -->
+    <div class="product" data-name="Sandra" data-price="500" data-stock="5" data-image="images/16.jpg" data-type="short">
+        <div class="imgwrap"><img src="images/16.jpg" alt="Sandra dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Sandra</p>
+        <p class="price">₱500</p>
+        <p class="stock">Stock: <span>5</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 17 -->
+    <div class="product" data-name="Serina" data-price="400" data-stock="4" data-image="images/17.jpg" data-type="short">
+        <div class="imgwrap"><img src="images/17.jpg" alt="Serina dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Serina</p>
+        <p class="price">₱400</p>
+        <p class="stock">Stock: <span>4</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 18 -->
+    <div class="product" data-name="Ruby" data-price="500" data-stock="6" data-image="images/18.jpg" data-type="short">
+        <div class="imgwrap"><img src="images/18.jpg" alt="Ruby dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Ruby</p>
+        <p class="price">₱500</p>
+        <p class="stock">Stock: <span>6</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 19 -->
+    <div class="product" data-name="Gisella" data-price="600" data-stock="3" data-image="images/19.jpg" data-type="maxi">
+        <div class="imgwrap"><img src="images/19.jpg" alt="Gisella dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Gisella</p>
+        <p class="price">₱600</p>
+        <p class="stock">Stock: <span>3</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- 20 -->
+    <div class="product" data-name="Nicole" data-price="400" data-stock="5" data-image="images/20.jpg" data-type="short">
+        <div class="imgwrap"><img src="images/20.jpg" alt="Nicole dress" onclick="openLightbox(this.src, this.alt)"></div>
+        <p class="dressname">Nicole</p>
+        <p class="price">₱400</p>
+        <p class="stock">Stock: <span>5</span> available</p>
+        <div class="product-buttons">
+            <button class="cart-btn" onclick="openProduct(this, 'cart')">Add to Cart</button>
+            <button class="buy-btn" onclick="openProduct(this, 'buy')">Buy Now</button>
+        </div>
+    </div>
+
+</div>
+<div id="noResults" hidden>
+    <p class="nr-title">No dresses found</p>
+    <p class="nr-hint">Try another name.</p>
+</div>
+
+<!-- ================= PRODUCT MODAL ================= -->
+<div id="productModal">
+    <div class="modal-box">
+        <button class="close-modal" onclick="closeProductModal()">×</button>
+        <img id="modalImage" class="modal-image" src="" alt="">
+        <div class="modal-info">
+            <h2 id="modalName"></h2>
+            <p class="modal-price" id="modalPrice"></p>
+            <p class="modal-stock"><span id="modalStock"></span> available</p>
+
+            <label class="quantity-label">Size</label>
+            <div class="size-options">
+                <button type="button" class="size-btn" onclick="selectSize(this)">Small</button>
+                <button type="button" class="size-btn" onclick="selectSize(this)">Medium</button>
+                <button type="button" class="size-btn" onclick="selectSize(this)">Large</button>
+            </div>
+
+            <label class="quantity-label">Quantity</label>
+            <div class="quantity-control">
+                <button onclick="changeQuantity(-1)">−</button>
+                <input type="number" id="quantityInput" value="1" min="1">
+                <button onclick="changeQuantity(1)">+</button>
+            </div>
+
+            <button class="modal-action" id="modalAction">Continue</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================= IMAGE LIGHTBOX ================= -->
+<div id="imageLightbox">
+    <button class="close-modal" onclick="closeLightbox()" style="color:#fff;">×</button>
+    <img id="lightboxImage" src="" alt="">
+</div>
+
+<!-- ================= CART MODAL ================= -->
+<div id="cartModal">
+    <div class="cart-box">
+        <button class="close-modal" onclick="closeCart()">×</button>
+        <h2>Your Cart</h2>
+        <fieldset>
+            <legend>Select items to checkout</legend>
+                <div class="cart-tools">
+                    <button type="button" class="cart-tool-btn" onclick="selectAllCart(true)">Select All</button>
+                    <button type="button" class="cart-tool-btn cart-tool-outline" onclick="selectAllCart(false)">Clear</button>
+                </div>
+            <div id="cartItems"></div>
+        </fieldset>
+        <div class="cart-total">Total: ₱<span id="cartTotal">0</span></div>
+        <button class="checkout-btn" onclick="checkoutSelected()">Proceed to Checkout</button>
+    </div>
+</div>
+
+<!-- ================= WISHLIST MODAL ================= -->
+<div id="wishlistModal">
+    <div class="cart-box">
+        <button class="close-modal" onclick="closeWishlist()">×</button>
+        <h2>Your Wishlist</h2>
+        <div id="wishlistItems"></div>
+    </div>
+</div>
+
+<!-- ================= CHECKOUT MODAL ================= -->
+<div id="checkoutModal">
+    <div class="modal-box checkout-box">
+        <button class="close-modal" onclick="closeCheckout()">×</button>
+        <div class="modal-info">
+            <h2>Customer Information</h2>
+
+            <form id="checkoutForm">
+
+                <!-- CUSTOMER NAME -->
+                <label class="quantity-label" for="buyerName">Customer Name</label>
+                <input
+                    type="text"
+                    id="buyerName"
+                    name="buyerName"
+                    placeholder="Enter your full name"
+                    autocomplete="off"
+                    required
+                >
+
+                <!-- CONTACT -->
+                <label class="quantity-label">Contact Number</label>
+                <input
+                    type="tel"
+                    id="buyerContact"
+                    placeholder="09XXXXXXXXX"
+                    inputmode="numeric"
+                    maxlength="11"
+                    required
+                >
+
+                <!-- EMAIL -->
+                <label class="quantity-label">Email Address</label>
+                <input
+                    type="email"
+                    id="buyerEmail"
+                    placeholder="you@example.com"
+                    required
+                >
+                <p id="emailError" class="field-error" hidden>
+                    Please enter a valid email address.
+                </p>
+
+                <!-- PROVINCE -->
+                <label class="quantity-label">Province</label>
+                <div class="custom-select-wrap">
+                    <button type="button" class="custom-select-trigger">
+                        <span class="custom-select-value placeholder">Select province</span>
+                        <svg class="custom-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <ul class="custom-select-options" hidden></ul>
+                    <select id="buyerProvince" class="native-select" required>
+                        <option value="" disabled selected>Select province</option>
+                    </select>
+                </div>
+                <p id="provinceError" class="field-error" hidden>
+                    Please select a valid province from the list.
+                </p>
+
+                <!-- CITY -->
+                <label class="quantity-label">City / Municipality</label>
+                <div class="custom-select-wrap">
+                    <button type="button" class="custom-select-trigger" disabled>
+                        <span class="custom-select-value placeholder">Select province first</span>
+                        <svg class="custom-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <ul class="custom-select-options" hidden></ul>
+                    <select id="buyerCity" class="native-select" disabled required>
+                        <option value="" disabled selected>Select province first</option>
+                    </select>
+                </div>
+                <p id="cityError" class="field-error" hidden>
+                    Please select a valid city/municipality from the list.
+                </p>
+
+                <!-- BARANGAY -->
+                <label class="quantity-label">Barangay</label>
+                <div class="custom-select-wrap">
+                    <button type="button" class="custom-select-trigger" disabled>
+                        <span class="custom-select-value placeholder">Select city first</span>
+                        <svg class="custom-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <ul class="custom-select-options" hidden></ul>
+                    <select id="buyerBarangay" class="native-select" disabled required>
+                        <option value="" disabled selected>Select city first</option>
+                    </select>
+                </div>
+                <p id="barangayError" class="field-error" hidden>
+                    Please select a valid barangay from the list.
+                </p>
+
+                <!-- STREET -->
+                <label class="quantity-label">House No. / Street</label>
+                <input
+                    type="text"
+                    id="buyerStreet"
+                    placeholder="e.g. 123 Mabini St."
+                    required
+                >
+
+                <!-- LANDMARK -->
+                <label class="quantity-label">Landmark (optional)</label>
+                <input
+                    type="text"
+                    id="buyerLandmark"
+                    placeholder="e.g. near the church"
+                >
+
+                <button type="submit" class="modal-action">
+                    Place Order
+                </button>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ================= CONFIRM MODAL ================= -->
+<div id="confirmModal">
+    <div class="mini-box">
+        <div class="mini-icon">?</div>
+        <h3>Confirm your order</h3>
+        <p>Press <span class="key-hint">Y</span> within 15 seconds to confirm your purchase.</p>
+        <div class="mini-actions">
+            <button type="button" class="mini-btn mini-btn-outline" id="confirmCancel">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================= SUCCESS MODAL ================= -->
+<div id="successModal">
+    <div class="mini-box">
+        <div class="mini-icon mini-icon-success">✓</div>
+        <h3>Purchase Successful!</h3>
+        <p>Thank you for your order. We'll get in touch with you shortly.</p>
+        <div class="mini-actions">
+            <button type="button" class="mini-btn mini-btn-solid" id="successOk">OK</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================= TOAST ================= -->
+<div id="toast"></div>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+
+    <!-- BACK TO TOP -->
+    <button id="backToTop" aria-label="Back to top">
+        <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+    </button>
+
+    <div class="social">
+        <a href="https://facebook.com/YOUR_PAGE" target="_blank" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7H7.9V12h2.6V9.8c0-2.6 1.5-4 3.9-4 1.1 0 2.3.2 2.3.2v2.5h-1.3c-1.3 0-1.7.8-1.7 1.6V12h2.9l-.5 2.9h-2.4v7A10 10 0 0 0 22 12"/></svg>
+        </a>
+        <a href="https://instagram.com/YOUR_PAGE" target="_blank" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2.1 1.9.2 2.4.4.6.2 1 .5 1.5 1 .4.4.7.8 1 1.5.2.5.3 1.2.4 2.4.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.2-.2 1.9-.4 2.4-.2.6-.5 1-1 1.5-.4.4-.8.7-1.5 1-.5.2-1.2.3-2.4.4-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2-.1-1.9-.2-2.4-.4-.6-.2-1-.5-1.5-1-.4-.4-.7-.8-1-1.5-.2-.5-.3-1.2-.4-2.4C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8c.1-1.2.2-1.9.4-2.4.2-.6.5-1 1-1.5.4-.4.8-.7 1.5-1 .5-.2 1.2-.3 2.4-.4C8.4 2.2 8.8 2.2 12 2.2m0-2.2C8.7 0 8.3 0 7 .1c-1.3.1-2.2.3-3 .6-.8.3-1.5.7-2.2 1.4C1.1 2.8.7 3.5.4 4.3c-.3.8-.5 1.7-.6 3C-.2 8.6 0 9 0 12s0 3.4.1 4.7c.1 1.3.3 2.2.6 3 .3.8.7 1.5 1.4 2.2.7.7 1.4 1.1 2.2 1.4.8.3 1.7.5 3 .6C8.3 24 8.7 24 12 24s3.4 0 4.7-.1c1.3-.1 2.2-.3 3-.6.8-.3 1.5-.7 2.2-1.4.7-.7 1.1-1.4 1.4-2.2.3-.8.5-1.7.6-3 .1-1.3.1-1.7.1-4.7s0-3.4-.1-4.7c-.1-1.3-.3-2.2-.6-3-.3-.8-.7-1.5-1.4-2.2C21.2 1.1 20.5.7 19.7.4c-.8-.3-1.7-.5-3-.6C15.4 0 15 0 12 0Zm0 5.8A6.2 6.2 0 1 0 18.2 12 6.2 6.2 0 0 0 12 5.8m0 10.2A4 4 0 1 1 16 12a4 4 0 0 1-4 4Zm6.4-10.4a1.4 1.4 0 1 1-1.4-1.4 1.4 1.4 0 0 1 1.4 1.4Z"/></svg>
+        </a>
+    </div>
+
+    <p>&copy; 2026 Brieselle Atelier. All rights reserved.</p>
+</footer>
+
+<script>
+
+function buyFromBanner(dressName) {
+    const targetCard = document.querySelector(`.product[data-name="${dressName}"]`);
+    if (targetCard) {
+        const buyBtn = targetCard.querySelector('.buy-btn');
+        if (buyBtn) buyBtn.click();
+    }
+}
+
+/* ==========================================================
+   CALABARZON ADDRESS DATA (Province -> City/Municipality -> Barangays)
+   Sourced from the official PSGC (Philippine Standard Geographic Code)
+   ========================================================== */
+const CALABARZON = {"Cavite":{"Alfonso":["Amuyong","Barangay I (Pob.)","Barangay II (Pob.)","Barangay III (Pob.)","Barangay IV (Pob.)","Barangay V (Pob.)","Bilog","Buck Estate","Esperanza Ibaba","Esperanza Ilaya","Kaysuyo","Kaytitinga I","Kaytitinga II","Kaytitinga III","Luksuhin","Luksuhin Ilaya","Mangas I","Mangas II","Marahan I","Marahan II","Matagbak I","Matagbak II","Pajo","Palumlum","Santa Teresa","Sikat","Sinaliw Malaki","Sinaliw na Munti","Sulsugin","Taywanak Ibaba","Taywanak Ilaya","Upli"],"Amadeo":["Banaybanay","Barangay I (Pob.)","Barangay II (Pob.)","Barangay III (Pob.)","Barangay IV (Pob.)","Barangay IX (Pob.)","Barangay V (Pob.)","Barangay VI (Pob.)","Barangay VII (Pob.)","Barangay VIII (Pob.)","Barangay X (Pob.)","Barangay XI (Pob.)","Barangay XII (Pob.)","Bucal","Buho","Dagatan","Halang","Loma","Maitim I","Maymangga","Minantok Kanluran","Minantok Silangan","Pangil","Salaban","Talon","Tamacan"],"Bacoor City":["Alima","Aniban I","Aniban II","Aniban III","Aniban IV","Aniban V","Banalo","Bayanan","Campo Santo","Daang Bukid","Digman","Dulong Bayan","Habay I","Habay II","Kaingin (Pob.)","Ligas I","Ligas II","Ligas III","Mabolo I","Mabolo II","Mabolo III","Maliksi I","Maliksi II","Maliksi III","Mambog I","Mambog II","Mambog III","Mambog IV","Mambog V","Molino I","Molino II","Molino III","Molino IV","Molino V","Molino VI","Molino VII","Niog I","Niog II","Niog III","P.F. Espiritu I (Panapaan)","P.F. Espiritu II","P.F. Espiritu III","P.F. Espiritu IV","P.F. Espiritu V","P.F. Espiritu VI","P.F. Espiritu VII","P.F. Espiritu VIII","Queens Row Central","Queens Row East","Queens Row West","Real I","Real II","Salinas I","Salinas II","Salinas III","Salinas IV","San Nicolas I","San Nicolas II","San Nicolas III","Sineguelasan","Tabing Dagat","Talaba I","Talaba II","Talaba III","Talaba IV","Talaba V","Talaba VI","Talaba VII","Zapote I","Zapote II","Zapote III","Zapote IV","Zapote V"],"Carmona":["Bancal","Barangay 1 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Barangay 5 (Pob.)","Barangay 6 (Pob.)","Barangay 7 (Pob.)","Barangay 8 (Pob.)","Cabilang Baybay","Lantic","Mabuhay","Maduya","Milagrosa"],"Cavite City":["Barangay 1 (Hen. M. Alvarez)","Barangay 10 (Kingfisher)","Barangay 10-A (Kingfisher-A)","Barangay 10-B (Kingfisher-B)","Barangay 11 (Lawin)","Barangay 12 (Love Bird)","Barangay 13 (Aguila)","Barangay 14 (Loro)","Barangay 15 (Kilyawan)","Barangay 16 (Martines)","Barangay 17 (Kalapati)","Barangay 18 (Maya)","Barangay 19 (Gemini)","Barangay 2 (C. Tirona)","Barangay 20 (Virgo)","Barangay 21 (Scorpio)","Barangay 22 (Leo)","Barangay 22-A (Leo A)","Barangay 23 (Aquarius)","Barangay 24 (Libra)","Barangay 25 (Capricorn)","Barangay 26 (Cancer)","Barangay 27 (Sagitarius)","Barangay 28 (Taurus)","Barangay 29 (Lao-lao)","Barangay 29-A (Lao-lao A)","Barangay 3 (Hen. E. Aguinaldo)","Barangay 30 (Bid-bid)","Barangay 31 (Maya-maya)","Barangay 32 (Salay-salay)","Barangay 33 (Buwan-buwan)","Barangay 34 (Lapu-lapu)","Barangay 35 (Hasa-hasa)","Barangay 36 (Sap-sap)","Barangay 36-A (Sap-sap A)","Barangay 37 (Cadena De Amor)","Barangay 37-A (Cadena de Amor A)","Barangay 38 (Sampaguita)","Barangay 38-A (Sampaguita A)","Barangay 39 (Jasmin)","Barangay 4 (Hen. M. Trias)","Barangay 40 (Gumamela)","Barangay 41 (Rosal)","Barangay 42 (Pinagbuklod)","Barangay 42-A (Pinagbuklod A)","Barangay 42-B (Pinagbuklod B)","Barangay 42-C (Pinagbuklod C)","Barangay 43 (Pinagpala)","Barangay 44 (Maligaya)","Barangay 45 (Kaunlaran)","Barangay 45-A (Kaunlaran A)","Barangay 46 (Sinagtala)","Barangay 47 (Pagkakaisa)","Barangay 47-A (Pagkakaisa A)","Barangay 47-B (Pagkakaisa B)","Barangay 48 (Narra)","Barangay 48-A (Narra A)","Barangay 49 (Akasya)","Barangay 49-A (Akasya A)","Barangay 5 (Hen. E. Evangelista)","Barangay 50 (Kabalyero)","Barangay 51 (Kamagong)","Barangay 52 (Ipil)","Barangay 53 (Yakal)","Barangay 53-A (Yakal A)","Barangay 53-B (Yakal B)","Barangay 54 (Pechay)","Barangay 54-A (Pechay A)","Barangay 55 (Ampalaya)","Barangay 56 (Labanos)","Barangay 57 (Repolyo)","Barangay 58 (Patola)","Barangay 58-A (Patola A)","Barangay 59 (Sitaw)","Barangay 6 (Diego Silang)","Barangay 60 (Letsugas)","Barangay 61 (Talong)","Barangay 61-A (Talong A)","Barangay 62 (Kangkong)","Barangay 62-A (Kangkong A)","Barangay 62-B (Kangkong B)","Barangay 7 (Kapitan Kong)","Barangay 8 (Manuel S. Rojas)","Barangay 9 (Kanaway)"],"City of Dasmariñas":["Burol","Burol I","Burol II","Burol III","Datu Esmael (Bago-a-ingud)","Emmanuel Bergado I","Emmanuel Bergado II","Fatima I","Fatima II","Fatima III","H-2","Langkaan I","Langkaan II","Luzviminda I","Luzviminda II","Paliparan I","Paliparan II","Paliparan III","Sabang","Saint Peter I","Saint Peter II","Salawag","Salitran I","Salitran II","Salitran III","Salitran IV","Sampaloc I","Sampaloc II","Sampaloc III","Sampaloc IV","Sampaloc V","San Agustin I","San Agustin II","San Agustin III","San Andres I","San Andres II","San Antonio De Padua I","San Antonio De Padua II","San Dionisio (Barangay 1)","San Esteban (Barangay 4)","San Francisco I","San Francisco II","San Isidro Labrador I","San Isidro Labrador II","San Jose","San Juan (San Juan I)","San Lorenzo Ruiz I","San Lorenzo Ruiz II","San Luis I","San Luis II","San Manuel I","San Manuel II","San Mateo","San Miguel","San Miguel II","San Nicolas I","San Nicolas II","San Roque (Sta. Cristina II)","San Simon (Barangay 7)","Santa Cristina I","Santa Cristina II","Santa Cruz I","Santa Cruz II","Santa Fe","Santa Lucia (San Juan II)","Santa Maria (Barangay 20)","Santo Cristo (Barangay 3)","Santo Niño I","Santo Niño II","Victoria Reyes","Zone I (Pob.)","Zone I-B","Zone II (Pob.)","Zone III (Pob.)","Zone IV (Pob.)"],"City of General Trias":["Alingaro","Arnaldo Pob. (Bgy. 7)","Bacao I","Bacao II","Bagumbayan Pob. (Bgy. 5)","Biclatan","Buenavista I","Buenavista II","Buenavista III","Corregidor Pob. (Bgy. 10)","Dulong Bayan Pob. (Bgy. 3)","Gov. Ferrer Pob. (Bgy. 1)","Javalera","Manggahan","Navarro","Ninety Sixth Pob. (Bgy. 8)","Panungyanan","Pasong Camachile I","Pasong Camachile II","Pasong Kawayan I","Pasong Kawayan II","Pinagtipunan","Prinza Pob. (Bgy. 9)","Sampalucan Pob. (Bgy. 2)","San Francisco","San Gabriel Pob. (Bgy. 4)","San Juan I","San Juan II","Santa Clara","Santiago","Tapia","Tejero","Vibora Pob. (Bgy. 6)"],"Gen. Mariano Alvarez":["Aldiano Olaes","Barangay 1 Poblacion (Area I)","Barangay 2 Poblacion","Barangay 3 Poblacion","Barangay 4 Poblacion","Barangay 5 Poblacion","Benjamin Tirona (Area D)","Bernardo Pulido (Area H)","Epifanio Malia","Fiorello Calimag (Area C)","Francisco De Castro (Sunshine Vill.)","Francisco Reyes","Gavino Maderan","Gregoria De Jesus","Inocencio Salud","Jacinto Lumbreras","Kapitan Kua (Area F)","Koronel Jose P. Elises (Area E)","Macario Dacon","Marcelino Memije","Nicolasa Virata (San Jose)","Pantaleon Granados (Area G)","Ramon Cruz (Area J)","San Gabriel (Area K)","San Jose","Severino De Las Alas","Tiniente Tiago"],"General Emilio Aguinaldo":["A. Dalusag","Batas Dao","Castaños Cerca","Castaños Lejos","Kabulusan","Kaymisas","Kaypaaba","Lumipa","Narvaez","Poblacion I","Poblacion II","Poblacion III","Poblacion IV","Tabora"],"Imus City":["Alapan I-A","Alapan I-B","Alapan I-C","Alapan II-A","Alapan II-B","Anabu I-A","Anabu I-B","Anabu I-C","Anabu I-D","Anabu I-E","Anabu I-F","Anabu I-G","Anabu II-A","Anabu II-B","Anabu II-C","Anabu II-D","Anabu II-E","Anabu II-F","Bagong Silang (Bahayang Pag-Asa)","Bayan Luma I","Bayan Luma II","Bayan Luma III","Bayan Luma IV","Bayan Luma IX","Bayan Luma V","Bayan Luma VI","Bayan Luma VII","Bayan Luma VIII","Bucandala I","Bucandala II","Bucandala III","Bucandala IV","Bucandala V","Buhay na Tubig","Carsadang Bago I","Carsadang Bago II","Magdalo","Maharlika","Malagasang I-A","Malagasang I-B","Malagasang I-C","Malagasang I-D","Malagasang I-E","Malagasang I-F","Malagasang I-G","Malagasang II-A","Malagasang II-B","Malagasang II-C","Malagasang II-D","Malagasang II-E","Malagasang II-F","Malagasang II-G","Mariano Espeleta I","Mariano Espeleta II","Mariano Espeleta III","Medicion I-A","Medicion I-B","Medicion I-C","Medicion I-D","Medicion II-A","Medicion II-B","Medicion II-C","Medicion II-D","Medicion II-E","Medicion II-F","Pag-Asa I","Pag-Asa II","Pag-Asa III","Palico I","Palico II","Palico III","Palico IV","Pasong Buaya I","Pasong Buaya II","Pinagbuklod","Poblacion I-A (Pob.)","Poblacion I-B","Poblacion I-C","Poblacion II-A (Pob.)","Poblacion II-B","Poblacion III-A (Pob.)","Poblacion III-B","Poblacion IV-A (Pob.)","Poblacion IV-B","Poblacion IV-C","Poblacion IV-D","Tanzang Luma I","Tanzang Luma II","Tanzang Luma III","Tanzang Luma IV (Southern City)","Tanzang Luma V","Tanzang Luma VI","Toclong I-A","Toclong I-B","Toclong I-C","Toclong II-A","Toclong II-B"],"Indang":["Agus-us","Alulod","Banaba Cerca","Banaba Lejos","Bancod","Barangay 1 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Buna Cerca","Buna Lejos I","Buna Lejos II","Calumpang Cerca","Calumpang Lejos I","Carasuchi","Daine I","Daine II","Guyam Malaki","Guyam Munti","Harasan","Kayquit I","Kayquit II","Kayquit III","Kaytambog","Kaytapos","Limbon","Lumampong Balagbag","Lumampong Halayhay","Mahabangkahoy Cerca","Mahabangkahoy Lejos","Mataas na Lupa (Checkpoint)","Pulo","Tambo Balagbag","Tambo Ilaya","Tambo Kulit","Tambo Malaki"],"Kawit":["Balsahan-Bisita","Batong Dalig","Binakayan-Aplaya","Binakayan-Kanluran","Congbalay-Legaspi","Gahak","Kaingen","Magdalo (Putol)","Manggahan-Lawin","Marulas","Panamitan","Poblacion","Pulvorista","Samala-Marquez","San Sebastian","Santa Isabel","Tabon I","Tabon II","Tabon III","Toclong","Tramo-Bantayan","Wakas I","Wakas II"],"Magallanes":["Baliwag","Barangay 1 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Barangay 5 (Pob.)","Bendita I","Bendita II","Caluangan","Kabulusan","Medina","Pacheco","Ramirez","San Agustin","Tua","Urdaneta"],"Maragondon":["Bucal I","Bucal II","Bucal III A","Bucal III B","Bucal IV A","Bucal IV B","Caingin Pob. (Barangay 3)","Garita I A","Garita I B","Layong Mabilog","Mabato","Pantihan I (Balayungan)","Pantihan II (Sagbat)","Pantihan III (Pook na Munti)","Pantihan IV (Pook ni Sara)","Patungan","Pinagsanhan I A","Pinagsanhan I B","Poblacion I A","Poblacion I B","Poblacion II A","Poblacion II B","San Miguel I A (Caputatan)","San Miguel I B","Talipusngo","Tulay Kanluran","Tulay Silangan"],"Mendez (Mendez-Nuñez)":["Anuling Cerca I","Anuling Cerca II","Anuling Lejos I (Anuling)","Anuling Lejos II","Asis I","Asis II","Asis III","Banayad","Bukal","Galicia I","Galicia II","Galicia III","Miguel Mojica","Palocpoc I","Palocpoc II","Panungyan I","Panungyan II","Poblacion I (Barangay I)","Poblacion II (Barangay II)","Poblacion III (Barangay III)","Poblacion IV (Barangay IV)","Poblacion V (Barangay V)","Poblacion VI (Barangay VI)","Poblacion VII (Barangay VII)"],"Naic":["Bagong Karsada","Balsahan","Bancaan","Bucana Malaki","Bucana Sasahan","Calubcob","Capt. C. Nazareno (Pob.)","Gomez-Zamora (Pob.)","Halang","Humbac","Ibayo Estacion","Ibayo Silangan","Kanluran","Labac","Latoria","Mabolo","Makina","Malainen Bago","Malainen Luma","Molino","Munting Mapino","Muzon","Palangue 1","Palangue 2 & 3","Sabang","San Roque","Santulan","Sapa","Timalan Balsahan","Timalan Concepcion"],"Noveleta":["Magdiwang","Poblacion","Salcedo I","Salcedo II","San Antonio I","San Antonio II","San Jose I","San Jose II","San Juan I","San Juan II","San Rafael I","San Rafael II","San Rafael III","San Rafael IV","Santa Rosa I","Santa Rosa II"],"Rosario":["Bagbag I","Bagbag II","Kanluran","Ligtong I","Ligtong II","Ligtong III","Ligtong IV","Muzon I","Muzon II","Poblacion","Sapa I","Sapa II","Sapa III","Sapa IV","Silangan I","Silangan II","Tejeros Convention","Wawa I","Wawa II","Wawa III"],"Silang":["Acacia","Adlas","Anahaw I","Anahaw II","Balite I","Balite II","Balubad","Banaba","Barangay I (Pob.)","Barangay II (Pob.)","Barangay III (Pob.)","Barangay IV (Pob.)","Barangay V (Pob.)","Batas","Biga I","Biga II","Biluso","Bucal","Buho","Bulihan","Cabangaan","Carmen","Hoyo","Hukay","Iba","Inchican","Ipil I","Ipil II","Kalubkob","Kaong","Lalaan I","Lalaan II","Litlit","Lucsuhin","Lumil","Maguyam","Malabag","Malaking Tatyao","Mataas Na Burol","Munting Ilog","Narra I","Narra II","Narra III","Paligawan","Pasong Langka","Pooc I","Pooc II","Pulong Bunga","Pulong Saging","Puting Kahoy","Sabutan","San Miguel I","San Miguel II","San Vicente I","San Vicente II","Santol","Tartaria","Tibig","Toledo","Tubuan I","Tubuan II","Tubuan III","Ulat","Yakal"],"Tagaytay City":["Asisan","Bagong Tubig","Calabuso (Calabuso South & North)","Dapdap East","Dapdap West","Francisco (San Francisco)","Guinhawa North","Guinhawa South","Iruhin East","Iruhin South","Iruhin West","Kaybagal East","Kaybagal North","Kaybagal South (Pob.)","Mag-Asawang Ilat","Maharlika East","Maharlika West","Maitim 2nd Central","Maitim 2nd East","Maitim 2nd West","Mendez Crossing East","Mendez Crossing West","Neogan","Patutong Malaki North","Patutong Malaki South","Sambong","San Jose","Silang Junction North","Silang Junction South","Sungay North","Sungay South","Tolentino East","Tolentino West","Zambal"],"Tanza":["Amaya I","Amaya II","Amaya III","Amaya IV","Amaya V","Amaya VI","Amaya VII","Bagtas","Barangay I (Pob.)","Barangay II (Pob.)","Barangay III (Pob.)","Barangay IV (Pob.)","Biga","Biwas","Bucal","Bunga","Calibuyo","Capipisa","Daang Amaya I","Daang Amaya II","Daang Amaya III","Halayhay","Julugan I","Julugan II","Julugan III","Julugan IV","Julugan V","Julugan VI","Julugan VII","Julugan VIII","Lambingan","Mulawin","Paradahan I","Paradahan II","Punta I","Punta II","Sahud Ulan","Sanja Mayor","Santol","Tanauan","Tres Cruses"],"Ternate":["Bucana","Poblacion I (Barangay I)","Poblacion I A","Poblacion II (Barangay II)","Poblacion III (Barangay III)","San Jose","San Juan I","San Juan II","Sapang I","Sapang II"],"Trece Martires City (Capital)":["Aguado (Piscal Mundo)","Cabezas","Cabuco","Conchu (Lagundian)","De Ocampo","Gregorio (Aliang)","Inocencio (B. Pook)","Lallana","Lapidario (Bayog)","Luciano (Bitangan)","Osorio","Perez (Lucbanan)","San Agustin (Pob.)"]},"Laguna":{"Alaminos":["Barangay I (Pob.)","Barangay II (Pob.)","Barangay III (Pob.)","Barangay IV (Pob.)","Del Carmen","Palma","San Agustin","San Andres","San Benito","San Gregorio","San Ildefonso","San Juan","San Miguel","San Roque","Santa Rosa"],"Bay":["Bitin","Calo","Dila","Maitim","Masaya","Paciano Rizal","Puypuy","San Agustin (Pob.)","San Antonio","San Isidro","San Nicolas (Pob.)","Santa Cruz","Santo Domingo","Tagumpay","Tranca"],"Cabuyao City":["Baclaran","Banaybanay","Banlic","Barangay Dos (Pob.)","Barangay Tres (Pob.)","Barangay Uno (Pob.)","Bigaa","Butong","Casile","Diezmo","Gulod","Mamatid","Marinig","Niugan","Pittland","Pulo","Sala","San Isidro"],"Calauan":["Balayhangin","Bangyas","Dayap","Hanggan","Imok","Kanluran (Pob.)","Lamot 1","Lamot 2","Limao","Mabacan","Masiit","Paliparan","Perez","Prinza","San Isidro","Santo Tomas","Silangan (Pob.)"],"Cavinti":["Anglas","Bangco","Bukal","Bulajo","Cansuso","Duhat","Inao-Awan","Kanluran Talaongan","Labayo","Layasin","Layug","Mahipon","Paowin","Poblacion","Silangan Talaongan","Sisilmin","Sumucab","Tibatib","Udia"],"City of Biñan":["Biñan (Poblacion)","Bungahan","Canlalay","Casile","De La Paz","Ganado","Langkiwa","Loma","Malaban","Malamig","Mampalasan","Platero","Poblacion","San Antonio","San Francisco (Halang)","San Jose","San Vicente","Santo Domingo","Santo Niño","Santo Tomas (Calabuso)","Soro-soro","Timbao","Tubigan","Zapote"],"City of Calamba":["Bagong Kalsada","Banadero","Banlic","Barandal","Barangay 1 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Barangay 5 (Pob.)","Barangay 6 (Pob.)","Barangay 7 (Pob.)","Batino","Bubuyan","Bucal","Bunggo","Burol","Camaligan","Canlubang","Halang","Hornalan","Kay-Anlog","La Mesa","Laguerta","Lawa","Lecheria","Lingga","Looc","Mabato","Majada Labas","Makiling","Mapagong","Masili","Maunong","Mayapa","Milagrosa (Tulo)","Paciano Rizal","Palingon","Palo-Alto","Pansol","Parian","Prinza","Punta","Puting Lupa","Real","Saimsim","Sampiruhan","San Cristobal","San Jose","San Juan","Sirang Lupa","Sucol","Turbina","Ulango","Uwisan"],"City of San Pedro":["Bagong Silang","Calendola","Chrysanthemum","Cuyab","Estrella","Fatima","G.S.I.S.","Landayan","Langgam","Laram","Magsaysay","Maharlika","Narra","Nueva","Pacita 1","Pacita 2","Poblacion","Riverside","Rosario","Sampaguita Village","San Antonio","San Lorenzo Ruiz","San Roque","San Vicente","Santo Niño","United Bayanihan","United Better Living"],"City of Santa Rosa":["Aplaya","Balibago","Caingin","Dila","Dita","Don Jose","Ibaba","Kanluran (Pob.)","Labas","Macabling","Malitlit","Malusak (Pob.)","Market Area (Pob.)","Pook","Pulong Santa Cruz","Santo Domingo","Sinalhan","Tagapo"],"Famy":["Asana (Pob.)","Bacong-Sigsigan","Bagong Pag-Asa (Pob.)","Balitoc","Banaba (Pob.)","Batuhan","Bulihan","Caballero (Pob.)","Calumpang (Pob.)","Cuebang Bato","Damayan (Pob.)","Kapatalan","Kataypuanan","Liyang","Maate","Magdalo (Pob.)","Mayatba","Minayutan","Salangbato","Tunhac"],"Kalayaan":["Longos","San Antonio","San Juan (Pob.)"],"Liliw":["Bagong Anyo (Pob.)","Bayate","Bongkol","Bubukal","Cabuyao","Calumpang","Culoy","Dagatan","Daniw (Danliw)","Dita","Ibabang Palina","Ibabang San Roque","Ibabang Sungi","Ibabang Taykin","Ilayang Palina","Ilayang San Roque","Ilayang Sungi","Ilayang Taykin","Kanlurang Bukal","Laguan","Luquin","Malabo-Kalantukan","Masikap (Pob.)","Maslun (Pob.)","Mojon","Novaliches","Oples","Pag-Asa (Pob.)","Palayan","Rizal (Pob.)","San Isidro","Silangang Bukal","Tuy-Baanan"],"Los Baños":["Anos","Bagong Silang","Bambang","Batong Malake","Baybayin (Pob.)","Bayog","Lalakay","Maahas","Malinta","Mayondon","Putho Tuntungin","San Antonio","Tadlak","Timugan (Pob.)"],"Luisiana":["Barangay Zone I (Pob.)","Barangay Zone II (Pob.)","Barangay Zone III (Pob.)","Barangay Zone IV (Pob.)","Barangay Zone V (Pob.)","Barangay Zone VI (Pob.)","Barangay Zone VII (Pob.)","Barangay Zone VIII (Pob.)","De La Paz","San Antonio","San Buenaventura","San Diego","San Isidro","San Jose","San Juan","San Luis","San Pablo","San Pedro","San Rafael","San Roque","San Salvador","Santo Domingo","Santo Tomas"],"Lumban":["Bagong Silang","Balimbingan (Pob.)","Balubad","Caliraya","Concepcion","Lewin","Maracta (Pob.)","Maytalang I","Maytalang II","Primera Parang (Pob.)","Primera Pulo (Pob.)","Salac (Pob.)","Santo Niño (Pob.)","Segunda Parang (Pob.)","Segunda Pulo (Pob.)","Wawa"],"Mabitac":["Amuyong","Bayanihan (Pob.)","Lambac (Pob.)","Libis ng Nayon (Pob.)","Lucong","Maligaya (Pob.)","Masikap (Pob.)","Matalatala","Nanguma","Numero","Paagahan","Pag-Asa (Pob.)","San Antonio","San Miguel","Sinagtala (Pob.)"],"Magdalena":["Alipit","Baanan","Balanac","Bucal","Buenavista","Bungkol","Buo","Burlungan","Cigaras","Halayhayin","Ibabang Atingay","Ibabang Butnong","Ilayang Atingay","Ilayang Butnong","Ilog","Malaking Ambling","Malinao","Maravilla","Munting Ambling","Poblacion","Sabang","Salasad","Tanawan","Tipunan"],"Majayjay":["Amonoy","Bakia","Balanac","Balayong","Banilad","Banti","Bitaoy","Botocan","Bukal","Burgos","Burol","Coralao","Gagalot","Ibabang Banga","Ibabang Bayucain","Ilayang Banga","Ilayang Bayucain","Isabang","Malinao","May-It","Munting Kawayan","Olla","Oobi","Origuel (Pob.)","Panalaban","Pangil","Panglan","Piit","Pook","Rizal","San Francisco (Pob.)","San Isidro","San Miguel (Pob.)","San Roque","Santa Catalina (Pob.)","Suba","Talortor","Tanawan","Taytay","Villa Nogales"],"Nagcarlan":["Abo","Alibungbungan","Alumbrado","Balayong","Balimbing","Balinacon","Bambang","Banago","Banca-banca","Bangcuro","Banilad","Bayaquitos","Buboy","Buenavista","Buhanginan","Bukal","Bunga","Cabuyew","Calumpang","Kanluran Kabubuhayan","Kanluran Lazaan","Labangan","Lagulo","Lawaguin","Maiit","Malaya","Malinao","Manaol","Maravilla","Nagcalbang","Oples","Palayan","Palina","Poblacion I (Pob.)","Poblacion II (Pob.)","Poblacion III (Pob.)","Sabang","San Francisco","Santa Lucia","Sibulan","Silangan Ilaya","Silangan Kabubuhayan","Silangan Lazaan","Silangan Napapatid","Sinipian","Sulsuguin","Talahib","Talangan","Taytay","Tipacan","Wakat","Yukos"],"Paete":["Bagumbayan (Pob.)","Bangkusay (Pob.)","Ermita (Pob.)","Ibaba del Norte (Pob.)","Ibaba del Sur (Pob.)","Ilaya del Norte (Pob.)","Ilaya del Sur (Pob.)","Maytoong (Pob.)","Quinale (Pob.)"],"Pagsanjan":["Anibong","Barangay I (Pob.)","Barangay II (Pob.)","Biñan","Buboy","Cabanbanan","Calusiche","Dingin","Lambac","Layugan","Magdapio","Maulawin","Pinagsanjan","Sabang","Sampaloc","San Isidro"],"Pakil":["Banilan","Baño (Pob.)","Burgos (Pob.)","Casa Real","Casinsin","Dorado","Gonzales (Pob.)","Kabulusan","Matikiw","Rizal (Pob.)","Saray","Taft (Pob.)","Tavera (Pob.)"],"Pangil":["Balian","Dambo","Galalan","Isla (Pob.)","Mabato-Azufre","Natividad (Pob.)","San Jose (Pob.)","Sulib"],"Pila":["Aplaya","Bagong Pook","Bukal","Bulilan Norte (Pob.)","Bulilan Sur (Pob.)","Concepcion","Labuin","Linga","Masico","Mojon","Pansol","Pinagbayanan","San Antonio","San Miguel","Santa Clara Norte (Pob.)","Santa Clara Sur (Pob.)","Tubuan"],"Rizal":["Antipolo","East Poblacion","Entablado","Laguan","Paule 1","Paule 2","Pook","Tala","Talaga","Tuy","West Poblacion"],"San Pablo City":["Atisan","Bagong Bayan II-A (Pob.)","Bagong Pook VI-C (Pob.)","Barangay I-A (Pob.)","Barangay I-B (Pob.)","Barangay II-A (Pob.)","Barangay II-B (Pob.)","Barangay II-C (Pob.)","Barangay II-D (Pob.)","Barangay II-E (Pob.)","Barangay II-F (Pob.)","Barangay III-A (Pob.)","Barangay III-B (Pob.)","Barangay III-C (Pob.)","Barangay III-D (Pob.)","Barangay III-E (Pob.)","Barangay III-F (Pob.)","Barangay IV-A (Pob.)","Barangay IV-B (Pob.)","Barangay IV-C (Pob.)","Barangay V-A (Pob.)","Barangay V-B (Pob.)","Barangay V-C (Pob.)","Barangay V-D (Pob.)","Barangay VI-A (Pob.)","Barangay VI-B (Pob.)","Barangay VI-D (Pob.)","Barangay VI-E (Pob.)","Barangay VII-A (Pob.)","Barangay VII-B (Pob.)","Barangay VII-C (Pob.)","Barangay VII-D (Pob.)","Barangay VII-E (Pob.)","Bautista","Concepcion","Del Remedio","Dolores","San Antonio 1","San Antonio 2","San Bartolome","San Buenaventura","San Crispin","San Cristobal","San Diego","San Francisco","San Gabriel","San Gregorio","San Ignacio","San Isidro","San Joaquin","San Jose","San Juan","San Lorenzo","San Lucas 1","San Lucas 2","San Marcos","San Mateo","San Miguel","San Nicolas","San Pedro","San Rafael","San Roque","San Vicente","Santa Ana","Santa Catalina","Santa Cruz","Santa Elena","Santa Felomina","Santa Isabel","Santa Maria","Santa Maria Magdalena","Santa Monica","Santa Veronica","Santiago I","Santiago II","Santisimo Rosario","Santo Angel","Santo Cristo","Santo Niño","Soledad"],"Santa Cruz (Capital)":["Alipit","Bagumbayan","Barangay I (Pob.)","Barangay II (Pob.)","Barangay III (Pob.)","Barangay IV (Pob.)","Barangay V (Pob.)","Bubukal","Calios","Duhat","Gatid","Jasaan","Labuin","Malinao","Oogong","Pagsawitan","Palasan","Patimbao","San Jose","San Juan","San Pablo Norte","San Pablo Sur","Santisima Cruz","Santo Angel Central","Santo Angel Norte","Santo Angel Sur"],"Santa Maria":["Adia","Bagong Pook","Bagumbayan","Barangay I (Pob.)","Barangay II (Pob.)","Barangay III (Pob.)","Barangay IV (Pob.)","Bubukal","Cabooan","Calangay","Cambuja","Coralan","Cueva","Inayapan","Jose Laurel, Sr.","Jose Rizal","Kayhakat","Macasipac","Masinao","Mataling-Ting","Pao-o","Parang Ng Buho","Santiago","Talangka","Tungkod"],"Siniloan":["Acevida","Bagong Pag-Asa (Pob.)","Bagumbarangay (Pob.)","Buhay","G. Redor (Pob.)","Gen. Luna","Halayhayin","J. Rizal (Pob.)","Kapatalan","Laguio","Liyang","Llavac","Macatad","Magsaysay","Mayatba","Mendiola","P. Burgos","Pandeno","Salubungan","Wawa"],"Victoria":["Banca-banca","Daniw","Masapang","Nanhaya (Pob.)","Pagalangan","San Benito","San Felix","San Francisco","San Roque (Pob.)"]},"Batangas":{"Agoncillo":["Adia","Bagong Sikat","Balangon","Bangin","Banyaga","Barigon","Bilibinwang","Coral Na Munti","Guitna","Mabini","Pamiga","Panhulan","Pansipit","Poblacion","Pook","San Jacinto","San Teodoro","Santa Cruz","Santo Tomas","Subic Ibaba","Subic Ilaya"],"Alitagtag":["Balagbag","Concepcion","Concordia","Dalipit East","Dalipit West","Dominador East","Dominador West","Munlawin Norte","Munlawin Sur","Muzon Primero","Muzon Segundo","Pinagkurusan","Ping-As","Poblacion East","Poblacion West","San Jose","San Juan","Santa Cruz","Tadlac"],"Balayan":["Baclaran","Barangay 1 (Pob.)","Barangay 10 (Pob.)","Barangay 11 (Pob.)","Barangay 12 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Barangay 5 (Pob.)","Barangay 6 (Pob.)","Barangay 7 (Pob.)","Barangay 8 (Pob.)","Barangay 9 (Pob.)","Calan","Caloocan","Calzada","Canda","Carenahan","Caybunga","Cayponce","Dalig","Dao","Dilao","Duhatan","Durungao","Gimalas","Gumamela","Lagnas","Lanatan","Langgangan","Lucban Pook","Lucban Putol","Magabe","Malalay","Munting Tubig","Navotas","Palikpikan","Patugo","Pooc","Sambat","Sampaga","San Juan","San Piro","Santol","Sukol","Tactac","Taludtud","Tanggoy"],"Balete":["Alangilan","Calawit","Looc","Magapi","Makina","Malabanan","Paligawan","Palsara","Poblacion","Sala","Sampalocan","San Sebastian","Solis"],"Batangas City (Capital)":["Alangilan","Balagtas","Balete","Banaba Center","Banaba Ibaba","Banaba Kanluran","Banaba Silangan","Barangay 1 (Pob.)","Barangay 10 (Pob.)","Barangay 11 (Pob.)","Barangay 12 (Pob.)","Barangay 13 (Pob.)","Barangay 14 (Pob.)","Barangay 15 (Pob.)","Barangay 16 (Pob.)","Barangay 17 (Pob.)","Barangay 18 (Pob.)","Barangay 19 (Pob.)","Barangay 2 (Pob.)","Barangay 20 (Pob.)","Barangay 21 (Pob.)","Barangay 22 (Pob.)","Barangay 23 (Pob.)","Barangay 24 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Barangay 5 (Pob.)","Barangay 6 (Pob.)","Barangay 7 (Pob.)","Barangay 8 (Pob.)","Barangay 9 (Pob.)","Bilogo","Bolbok","Bukal","Calicanto","Catandala","Concepcion","Conde Itaas","Conde Labak","Cuta","Dalig","Dela Paz","Dela Paz Pulot Aplaya","Dela Paz Pulot Itaas","Domoclay","Dumantay","Gulod Itaas","Gulod Labak","Haligue Kanluran","Haligue Silangan","Ilihan","Kumba","Kumintang Ibaba","Kumintang Ilaya","Libjo","Liponpon, Isla Verde","Maapas","Mabacong (Matoco)","Mahabang Dahilig","Mahabang Parang","Mahacot Kanluran","Mahacot Silangan","Malalim","Malibayo","Malitam","Maruclap","Pagkilatan","Paharang Kanluran","Paharang Silangan","Pallocan Kanluran","Pallocan Silangan","Pinamucan","Pinamucan Ibaba","Pinamucan Silangan","Sampaga","San Agapito, Isla Verde","San Agustin Kanluran, Isla Verde","San Agustin Silangan, Isla Verde","San Andres, Isla Verde","San Antonio, Isla Verde","San Isidro","San Jose Sico","San Miguel","San Pedro","Santa Clara","Santa Rita Aplaya","Santa Rita Karsada","Santo Domingo","Santo Niño","Simlong","Sirang Lupa","Sorosoro Ibaba","Sorosoro Ilaya","Sorosoro Karsada","Tabangao Ambulong","Tabangao Aplaya (Tabangao Proper)","Tabangao Dao","Talahib Pandayan","Talahib Payapa","Talumpok Kanluran","Talumpok Silangan","Tinga Itaas","Tinga Labak","Tulo","Wawa"],"Bauan":["Alagao","Aplaya","As-Is","Bagong Silang","Baguilawa","Balayong","Barangay I (Pob.)","Barangay II (Pob.)","Barangay III (Pob.)","Barangay IV (Pob.)","Bolo","Colvo","Cupang","Durungao","Gulibay","Inicbulan","Locloc","Magalang-Galang","Malindig","Manalupong","Manghinao Proper","Manghinao Uno","New Danglayan","Orense","Pitugo","Rizal","Sampaguita","San Agustin","San Andres Proper","San Andres Uno","San Diego","San Miguel","San Pablo","San Pedro","San Roque","San Teodoro","San Vicente","Santa Maria","Santo Domingo","Sinala"],"Calaca":["Baclas","Bagong Tubig","Balimbing","Bambang","Barangay 1 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Barangay 5 (Pob.)","Barangay 6 (Pob.)","Bisaya","Cahil","Calantas","Caluangan","Camastilisan","Coral Ni Bacal","Coral Ni Lopez (Sugod)","Dacanlao","Dila","Loma","Lumbang Calzada","Lumbang Na Bata","Lumbang Na Matanda","Madalunot","Makina","Matipok","Munting Coral","Niyugan","Pantay","Puting Bato East","Puting Bato West","Puting Kahoy","Quisumbing","Salong","San Rafael","Sinisian","Taklang Anak","Talisay","Tamayo","Timbain"],"Calatagan":["Bagong Silang","Baha","Balibago","Balitoc","Barangay 1 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Biga","Bucal","Carlosa","Carretunan","Encarnacion","Gulod","Hukay","Lucsuhin","Luya","Paraiso","Quilitisan","Real","Sambungan","Santa Ana","Talibayog","Talisay","Tanagan"],"City of Tanauan":["Altura Bata","Altura Matanda","Altura-South","Ambulong","Bagbag","Bagumbayan","Balele","Banadero","Banjo East","Banjo Laurel (Banjo West)","Bilog-bilog","Boot","Cale","Darasa","Gonzales","Hidalgo","Janopol","Janopol Oriental","Laurel","Luyos","Mabini","Malaking Pulo","Maria Paz","Maugat","Montaña (Ik-ik)","Natatas","Pagaspas","Pantay Bata","Pantay Matanda","Poblacion Barangay 1","Poblacion Barangay 2","Poblacion Barangay 3","Poblacion Barangay 4","Poblacion Barangay 5","Poblacion Barangay 6","Poblacion Barangay 7","Sala","Sambat","San Jose","Santol (Doña Jacoba Garcia)","Santor","Sulpoc","Suplang","Talaga","Tinurik","Trapiche","Ulango","Wawa"],"Cuenca":["Balagbag","Barangay 1 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Barangay 5 (Pob.)","Barangay 6 (Pob.)","Barangay 7 (Pob.)","Barangay 8 (Pob.)","Bungahan","Calumayin","Dalipit East","Dalipit West","Dita","Don Juan","Emmanuel","Ibabao","Labac","Pinagkaisahan","San Felipe","San Isidro"],"Ibaan":["Bago","Balanga","Bungahan","Calamias","Catandala","Coliat","Dayapan","Lapu-lapu","Lucsuhin","Mabalor","Malainin","Matala","Munting-Tubig","Palindan","Pangao","Panghayaan","Poblacion","Quilo","Sabang","Salaban I","Salaban II","San Agustin","Sandalan","Santo Niño","Talaibon","Tulay Na Patpat"],"Laurel":["As-Is","Balakilong","Barangay 1 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Barangay 5 (Pob.)","Berinayan","Bugaan East","Bugaan West","Buso-buso","Dayap Itaas","Gulod","J. Leviste","Molinete","Niyugan","Paliparan","San Gabriel","San Gregorio","Santa Maria","Ticub"],"Lemery":["Anak-Dagat","Arumahan","Ayao-iyao","Bagong Pook","Bagong Sikat","Balanga","Bukal","Cahilan I","Cahilan II","Dayapan","District I (Pob.)","District II (Pob.)","District III (Pob.)","District IV (Pob.)","Dita","Gulod","Lucky","Maguihan","Mahabang Dahilig","Mahayahay","Maigsing Dahilig","Maligaya","Malinis","Masalisi","Mataas Na Bayan","Matingain I","Matingain II","Mayasang","Niugan","Nonong Casto","Palanas","Payapa Ibaba","Payapa Ilaya","Rizal","Sambal Ibaba","Sambal Ilaya","San Isidro Ibaba","San Isidro Itaas","Sangalang","Sinisian East","Sinisian West","Talaga","Tubigan","Tubuan","Wawa Ibaba","Wawa Ilaya"],"Lian":["Bagong Pook","Balibago","Barangay 1 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Barangay 5 (Pob.)","Binubusan","Bungahan","Cumba","Humayingan","Kapito","Lumaniag","Luyahan","Malaruhatan","Matabungkay","Prenza","Puting-Kahoy","San Diego"],"Lipa City":["Adya","Anilao","Anilao-Labac","Antipolo Del Norte","Antipolo Del Sur","Bagong Pook","Balintawak","Banaybanay","Barangay 12 (Pob.)","Bolbok","Bugtong na Pulo","Bulacnin","Bulaklakan","Calamias","Cumba","Dagatan","Duhatan","Halang","Inosloban","Kayumanggi","Latag","Lodlod","Lumbang","Mabini","Malagonlong","Malitlit","Marauoy","Mataas Na Lupa","Munting Pulo","Pagolingin Bata","Pagolingin East","Pagolingin West","Pangao","Pinagkawitan","Pinagtongulan","Plaridel","Poblacion Barangay 1","Poblacion Barangay 10","Poblacion Barangay 11","Poblacion Barangay 2","Poblacion Barangay 3","Poblacion Barangay 4","Poblacion Barangay 5","Poblacion Barangay 6","Poblacion Barangay 7","Poblacion Barangay 8","Poblacion Barangay 9","Poblacion Barangay 9-A","Pusil","Quezon","Rizal","Sabang","Sampaguita","San Benito","San Carlos","San Celestino","San Francisco","San Guillermo","San Jose","San Lucas","San Salvador","San Sebastian (Balagbag)","Santo Niño","Santo Toribio","Sapac","Sico","Talisay","Tambo","Tangob","Tanguay","Tibig","Tipacan"],"Lobo":["Apar","Balatbat","Balibago","Banalo","Biga","Bignay","Calo","Calumpit","Fabrica","Jaybanga","Lagadlarin","Mabilog Na Bundok","Malabrigo","Malalim Na Sanog","Malapad Na Parang","Masaguitsit","Nagtalongtong","Nagtoctoc","Olo-olo","Pinaghawanan","Poblacion","San Miguel","San Nicolas","Sawang","Soloc","Tayuman"],"Mabini":["Anilao East","Anilao Proper","Bagalangit","Bulacan","Calamias","Estrella","Gasang","Laurel","Ligaya","Mainaga","Mainit","Majuben","Malimatoc I","Malimatoc II","Nag-Iba","Pilahan","Poblacion","Pulang Lupa","Pulong Anahao","Pulong Balibaguhan","Pulong Niogan","Saguing","Sampaguita","San Francisco","San Jose","San Juan","San Teodoro","Santa Ana","Santa Mesa","Santo Niño","Santo Tomas","Solo","Talaga East","Talaga Proper"],"Malvar":["Bagong Pook","Bilucao (San Isidro Western)","Bulihan","Luta Del Norte","Luta Del Sur","Poblacion","San Andres","San Fernando","San Gregorio","San Isidro East","San Juan","San Pedro I (Eastern)","San Pedro II (Western)","San Pioquinto","Santiago"],"Mataasnakahoy":["Barangay II-A (Pob.)","Bayorbor","Bubuyan","Calingatan","District I (Pob.)","District II (Pob.)","District III (Pob.)","District IV (Pob.)","Kinalaglagan","Loob","Lumang Lipa","Manggahan","Nangkaan","San Sebastian","Santol","Upa"],"Nasugbu":["Aga","Balaytigui","Banilad","Barangay 1 (Pob.)","Barangay 10 (Pob.)","Barangay 11 (Pob.)","Barangay 12 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Barangay 5 (Pob.)","Barangay 6 (Pob.)","Barangay 7 (Pob.)","Barangay 8 (Pob.)","Barangay 9 (Pob.)","Bilaran","Bucana","Bulihan","Bunducan","Butucan","Calayo","Catandaan","Cogunan","Dayap","Kaylaway","Kayrilaw","Latag","Looc","Lumbangan","Malapad Na Bato","Mataas Na Pulo","Maugat","Munting Indan","Natipuan","Pantalan","Papaya","Putat","Reparo","Talangan","Tumalim","Utod","Wawa"],"Padre Garcia":["Banaba","Banaybanay","Bawi","Bukal","Castillo","Cawongan","Manggas","Maugat East","Maugat West","Pansol","Payapa","Poblacion","Quilo-quilo North","Quilo-quilo South","San Felipe","San Miguel","Tamak","Tangob"],"Rosario":["Alupay","Antipolo","Bagong Pook","Balibago","Barangay A (Pob.)","Barangay B (Pob.)","Barangay C (Pob.)","Barangay D (Pob.)","Barangay E (Pob.)","Bayawang","Baybayin","Bulihan","Cahigam","Calantas","Colongan","Itlugan","Leviste (Tubahan)","Lumbangan","Maalas-As","Mabato","Mabunga","Macalamcam A","Macalamcam B","Malaya","Maligaya","Marilag","Masaya","Matamis","Mavalor","Mayuro","Namuco","Namunga","Nasi","Natu","Palakpak","Pinagsibaan","Putingkahoy","Quilib","Salao","San Carlos","San Ignacio","San Isidro","San Jose","San Roque","Santa Cruz","Timbugan","Tiquiwan","Tulos"],"San Jose":["Aguila","Anus","Aya","Bagong Pook","Balagtasin","Balagtasin I","Banaybanay I","Banaybanay II","Bigain I","Bigain II","Bigain South","Calansayan","Dagatan","Don Luis","Galamay-Amo","Lalayat","Lapolapo I","Lapolapo II","Lepute","Lumil","Mojon-Tampoy","Natunuan","Palanca","Pinagtung-Ulan","Poblacion Barangay I","Poblacion Barangay II","Poblacion Barangay III","Poblacion Barangay IV","Sabang","Salaban","Santo Cristo","Taysan","Tugtug"],"San Juan":["Abung","Balagbag","Barualte","Bataan","Buhay Na Sapa","Bulsa","Calicanto","Calitcalit","Calubcub I","Calubcub II","Catmon","Coloconto","Escribano","Hugom","Imelda (Tubog)","Janaojanao","Laiya-Aplaya","Laiya-Ibabao","Libato","Lipahan","Mabalanoy","Maraykit","Muzon","Nagsaulay","Palahanan I","Palahanan II","Palingowak","Pinagbayanan","Poblacion","Poctol","Pulangbato","Putingbuhangin","Quipot","Sampiro","Sapangan","Sico I","Sico II","Subukin","Talahiban I","Talahiban II","Ticalan","Tipaz"],"San Luis":["Abiacao","Bagong Tubig","Balagtasin","Balite","Banoyo","Boboy","Bonliw","Calumpang East","Calumpang West","Dulangan","Durungao","Locloc","Luya","Mahabang Parang","Manggahan","Muzon","Poblacion","San Antonio","San Isidro","San Jose","San Martin","Santa Monica","Taliba","Talon","Tejero","Tungal"],"San Nicolas":["Abelo","Alas-as","Balete","Baluk-baluk","Bancoro","Bangin","Calangay","Hipit","Maabud North","Maabud South","Munlawin","Pansipit","Poblacion","Pulang-Bato","Santo Niño","Sinturisan","Tagudtod","Talang"],"San Pascual":["Alalum","Antipolo","Balimbing","Banaba","Bayanan","Danglayan","Del Pilar","Gelerang Kawayan","Ilat North","Ilat South","Kaingin","Laurel","Malaking Pook","Mataas Na Lupa","Natunuan North","Natunuan South","Padre Castillo","Palsahingin","Pila","Poblacion","Pook Ni Banal","Pook Ni Kapitan","Resplandor","Sambat","San Antonio","San Mariano","San Mateo","Santa Elena","Santo Niño"],"Santa Teresita":["Antipolo","Bihis","Burol","Calayaan","Calumala","Cuta East","Cutang Cawayan","Irukan","Pacifico","Poblacion I","Poblacion II","Poblacion III","Saimsim","Sampa","Sinipian","Tambo Ibaba","Tambo Ilaya"],"Santo Tomas":["Barangay I (Pob.)","Barangay II (Pob.)","Barangay III (Pob.)","Barangay IV (Pob.)","San Agustin","San Antonio","San Bartolome","San Felix","San Fernando","San Francisco","San Isidro Norte","San Isidro Sur","San Joaquin","San Jose","San Juan","San Luis","San Miguel","San Pablo","San Pedro","San Rafael","San Roque","San Vicente","Santa Ana","Santa Anastacia","Santa Clara","Santa Cruz","Santa Elena","Santa Maria","Santa Teresita","Santiago"],"Taal":["Apacay","Balisong","Bihis","Bolbok","Buli","Butong","Carasuche","Cawit","Caysasay","Cubamba","Cultihan","Gahol","Halang","Iba","Ilog","Imamawo","Ipil","Laguile","Latag","Luntal","Mahabang Lodlod","Niogan","Pansol","Poblacion 1","Poblacion 10","Poblacion 11","Poblacion 12","Poblacion 13","Poblacion 14","Poblacion 2","Poblacion 3","Poblacion 4","Poblacion 5","Poblacion 6","Poblacion 7","Poblacion 8","Poblacion 9","Pook","Seiran","Tatlong Maria","Tierra Alta","Tulo"],"Talisay":["Aya","Balas","Banga","Buco","Caloocan","Leynes","Miranda","Poblacion Barangay 1","Poblacion Barangay 2","Poblacion Barangay 3","Poblacion Barangay 4","Poblacion Barangay 5","Poblacion Barangay 6","Poblacion Barangay 7","Poblacion Barangay 8","Quiling","Sampaloc","San Guillermo","Santa Maria","Tranca","Tumaway"],"Taysan":["Bacao","Bilogo","Bukal","Dagatan","Guinhawa","Laurel","Mabayabas","Mahanadiong","Mapulo","Mataas Na Lupa","Pag-Asa","Panghayaan","Pinagbayanan","Piña","Poblacion East","Poblacion West","San Isidro","San Marcelino","Santo Niño","Tilambo"],"Tingloy":["Barangay 13 (Poblacion 1)","Barangay 14 (Poblacion 2)","Barangay 15 (Poblacion 3)","Corona","Gamao","Makawayan","Marikaban","Papaya","Pisa","San Isidro","San Jose","San Juan","San Pedro","Santo Tomas","Talahib"],"Tuy":["Acle","Bayudbud","Bolboc","Burgos (Pob.)","Dalima","Dao","Guinhawa","Lumbangan","Luna (Pob.)","Luntal","Magahis","Malibu","Mataywanac","Palincaro","Putol","Rillo (Pob.)","Rizal (Pob.)","Sabang","San Jose","Talon","Toong","Tuyon-tuyon"]},"Rizal":{"Angono":["Bagumbayan","Kalayaan","Mahabang Parang","Poblacion Ibaba","Poblacion Itaas","San Isidro","San Pedro","San Roque","San Vicente","Santo Niño"],"Baras":["Concepcion","Evangelista","Mabini","Pinugay","Rizal (Pob.)","San Jose","San Juan","San Miguel","San Salvador","Santiago"],"Binangonan":["Bangad","Batingan","Bilibiran","Binitagan","Bombong","Buhangin","Calumpang","Ginoong Sanay","Gulod","Habagatan","Ithan","Janosa","Kalawaan","Kalinawan","Kasile","Kaytome","Kinaboogan","Kinagatan","Layunan (Pob.)","Libid (Pob.)","Libis (Pob.)","Limbon-limbon","Lunsad","Macamot","Mahabang Parang","Malakaban","Mambog","Pag-Asa","Palangoy","Pantok","Pila Pila","Pinagdilawan","Pipindan","Rayap","San Carlos","Sapang","Tabon","Tagpos","Tatala","Tayuman"],"Cainta":["San Andres (Pob.)","San Isidro","San Juan","San Roque","Santa Rosa","Santo Domingo","Santo Niño"],"Cardona":["Balibago","Boor","Calahan","Dalig","Del Remedio (Pob.)","Iglesia (Pob.)","Lambac","Looc","Malanggam-Calubacan","Nagsulo","Navotas","Patunhay","Real (Pob.)","Sampad","San Roque (Pob.)","Subay","Ticulio","Tuna"],"City of Antipolo (Capital)":["Bagong Nayon","Beverly Hills","Calawis","Cupang","Dalig","Dela Paz (Pob.)","Inarawan","Mambugan","Mayamot","Muntingdilaw","San Isidro (Pob.)","San Jose (Pob.)","San Juan","San Luis","San Roque (Pob.)","Santa Cruz"],"Jala-Jala":["Bagumbong","Bayugo","Lubo","Paalaman","Pagkalinawan","Palaypalay","Punta","Second District (Pob.)","Sipsipin","Special District (Pob.)","Third District (Pob.)"],"Morong":["Bombongan","Can-Cal-Lan (Caniogan-Calero-Lanang)","Lagundi","Maybancal","San Guillermo","San Jose (Pob.)","San Juan (Pob.)","San Pedro (Pob.)"],"Pililla":["Bagumbayan (Pob.)","Halayhayin","Hulo (Pob.)","Imatong (Pob.)","Malaya","Niogan","Quisao","Takungan (Pob.)","Wawa (Pob.)"],"Rodriguez (Montalban)":["Balite (Pob.)","Burgos","Geronimo","Macabud","Manggahan","Mascap","Puray","Rosario","San Isidro","San Jose","San Rafael"],"San Mateo":["Ampid I","Ampid II","Banaba","Dulong Bayan 1","Dulong Bayan 2","Guinayang","Guitnang Bayan I (Pob.)","Guitnang Bayan II (Pob.)","Gulod Malaya","Malanday","Maly","Pintong Bocawe","Santa Ana","Santo Niño","Silangan"],"Tanay":["Cayabu","Cuyambay","Daraitan","Katipunan-Bayan (Pob.)","Kaybuto (Pob.)","Laiban","Mag-Ampon (Pob.)","Mamuyao","Pinagkamaligan (Pob.)","Plaza Aldea (Pob.)","Sampaloc","San Andres","San Isidro (Pob.)","Santa Inez","Santo Niño","Tabing Ilog (Pob.)","Tandang Kutyo (Pob.)","Tinucan","Wawa (Pob.)"],"Taytay":["Dolores (Pob.)","Muzon","San Isidro","San Juan","Santa Ana"],"Teresa":["Bagumbayan","Calumpang Santo Cristo","Dalig","Dulumbayan","May-Iba","Poblacion","Prinza","San Gabriel","San Roque"]},"Quezon":{"Agdangan":["Binagbag","Dayap","Ibabang Kinagunan","Ilayang Kinagunan","Kanlurang Calutan","Kanlurang Maligaya","Poblacion I","Poblacion II","Salvacion","Silangang Calutan","Silangang Maligaya","Sildora"],"Alabat":["Angeles","Bacong","Balungay","Barangay 1 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Barangay 5 (Pob.)","Buenavista","Caglate","Camagong","Gordon","Pambilan Norte","Pambilan Sur","Villa Esperanza","Villa Jesus Este","Villa Jesus Weste","Villa Norte","Villa Victoria"],"Atimonan":["Angeles","Balubad","Balugohin","Barangay Zone 1 (Pob.)","Barangay Zone 2 (Pob.)","Barangay Zone 3 (Pob.)","Barangay Zone 4 (Pob.)","Buhangin","Caridad Ibaba","Caridad Ilaya","Habingan","Inaclagan","Inalig","Kilait","Kulawit","Lakip","Lubi","Lumutan","Magsaysay","Malinao Ibaba","Malinao Ilaya","Malusak","Manggalayan Bundok","Manggalayan Labak","Matanag","Montes Balaon","Montes Kallagan","Ponon","Rizal","San Andres Bundok","San Andres Labak","San Isidro","San Jose Balatok","San Rafael","Santa Catalina","Sapaan","Sokol","Tagbakin","Talaba","Tinandog","Villa Ibaba","Villa Ilaya"],"Buenavista":["Bagong Silang","Batabat Norte","Batabat Sur","Buenavista","Bukal","Bulo","Cabong","Cadlit","Catulin","Cawa","De La Paz","Del Rosario","Hagonghong","Ibabang Wasay","Ilayang Wasay","Lilukin","Mabini","Mabutag","Magallanes","Maligaya (Esperanza)","Manlana","Masaya","Poblacion","Rizal","Sabang Pinamasagan","Sabang Piris","San Diego","San Isidro Ibaba","San Isidro Ilaya","San Pablo","San Pedro (Villa Rodrigo)","San Vicente","Siain","Villa Aurora","Villa Batabat","Villa Magsaysay","Villa Veronica"],"Burdeos":["Aluyon","Amot","Anibawan","Bonifacio","Cabugao","Cabungalunan","Calutcot","Caniwan","Carlagan","Mabini","Palasan","Poblacion","Rizal","San Rafael"],"Calauag":["Agoho","Anahawan","Anas","Apad Lutao","Apad Quezon","Apad Taisan","Atulayan","Baclaran","Bagong Silang","Balibago","Bangkuruhan","Bantolinao","Barangay I (Pob.)","Barangay II (Pob.)","Barangay III (Pob.)","Barangay IV (Pob.)","Barangay V (Pob.)","Bigaan","Binutas","Biyan","Bukal","Buli","Dapdap","Dominlog","Doña Aurora","Guinosayan","Ipil","Kalibo (Santa Cruz)","Kapaluhan","Katangtang","Kigtan","Kinalin Ibaba","Kinalin Ilaya","Kinamaligan","Kumaludkud","Kunalum","Kuyaoyao","Lagay","Lainglaingan","Lungib","Mabini","Madlangdungan","Maglipad (Rosario)","Maligaya","Mambaling","Manhulugin","Marilag (Punaya)","Mulay","Pandanan","Pansol","Patihan","Pinagbayanan","Pinagkamaligan","Pinagsakahan","Pinagtalleran","Rizal Ibaba","Rizal Ilaya","Sabang I","Sabang II","Salvacion","San Quintin","San Roque Ibaba","San Roque Ilaya","Santa Cecilia","Santa Maria","Santa Milagrosa","Santa Rosa","Santo Angel (Pangahoy)","Santo Domingo","Sinag","Sumilang","Sumulong","Tabansak","Talingting","Tamis","Tikiwan","Tiniguiban","Villa Magsino","Villa San Isidro","Viñas","Yaganak"],"Candelaria":["Buenavista East","Buenavista West","Bukal Norte","Bukal Sur","Kinatihan I","Kinatihan II","Malabanban Norte","Malabanban Sur","Mangilag Norte","Mangilag Sur","Masalukot I","Masalukot II","Masalukot III","Masalukot IV","Masalukot V","Masin Norte","Masin Sur","Mayabobo","Pahinga Norte","Pahinga Sur","Poblacion","San Andres","San Isidro","Santa Catalina Norte","Santa Catalina Sur"],"Catanauan":["Ajos","Anusan","Barangay 1 (Pob.)","Barangay 10 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Barangay 5 (Pob.)","Barangay 6 (Pob.)","Barangay 7 (Pob.)","Barangay 8 (Pob.)","Barangay 9 (Pob.)","Bolo","Bulagsong","Camandiison","Canculajao","Catumbo","Cawayanin Ibaba","Cawayanin Ilaya","Cutcutan","Dahican","Doongan Ibaba","Doongan Ilaya","Gatasan","Macpac","Madulao","Matandang Sabang Kanluran","Matandang Sabang Silangan","Milagrosa","Navitas","Pacabit","San Antonio Magkupa","San Antonio Pala","San Isidro","San Jose (Anyao)","San Pablo (Suha)","San Roque (Doyon)","San Vicente Kanluran","San Vicente Silangan","Santa Maria (Dao)","Tagabas Ibaba","Tagabas Ilaya","Tagbacan Ibaba","Tagbacan Ilaya","Tagbacan Silangan","Tuhian"],"City of Tayabas":["Alitao","Alsam Ibaba","Alsam Ilaya","Alupay","Angeles Zone I (Pob.)","Angeles Zone II","Angeles Zone III","Angeles Zone IV","Angustias Zone I (Pob.)","Angustias Zone II","Angustias Zone III","Angustias Zone IV","Anos","Ayaas","Baguio","Banilad","Bukal Ibaba","Bukal Ilaya","Calantas","Calumpang","Camaysa","Dapdap","Domoit Kanluran","Domoit Silangan","Gibanga","Ibas","Ilasan Ibaba","Ilasan Ilaya","Ipilan","Isabang","Katigan Kanluran","Katigan Silangan","Lakawan","Lalo","Lawigue","Lita (Pob.)","Malaoa","Masin","Mate","Mateuna","Mayowe","Nangka Ibaba","Nangka Ilaya","Opias","Palale Ibaba","Palale Ilaya","Palale Kanluran","Palale Silangan","Pandakaki","Pook","Potol","San Diego Zone I (Pob.)","San Diego Zone II","San Diego Zone III","San Diego Zone IV","San Isidro Zone I (Pob.)","San Isidro Zone II","San Isidro Zone III","San Isidro Zone IV","San Roque Zone I (Pob.)","San Roque Zone II","Talolong","Tamlong","Tongko","Valencia","Wakas"],"Dolores":["Antonino (Ayusan)","Bagong Anyo (Pob.)","Bayanihan (Pob.)","Bulakin I","Bulakin II","Bungoy","Cabatang","Dagatan","Kinabuhayan","Maligaya (Pob.)","Manggahan","Pinagdanlayan","Putol","San Mateo","Santa Lucia","Silanganan (Pob.)"],"General Luna":["Bacong Ibaba","Bacong Ilaya","Barangay 1 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Barangay 5 (Pob.)","Barangay 6 (Pob.)","Barangay 7 (Pob.)","Barangay 8 (Pob.)","Barangay 9 (Pob.)","Lavides","Magsaysay","Malaya","Nieva","Recto","San Ignacio Ibaba","San Ignacio Ilaya","San Isidro Ibaba","San Isidro Ilaya","San Jose","San Nicolas","San Vicente","Santa Maria Ibaba","Santa Maria Ilaya","Sumilang","Villarica"],"General Nakar":["Anoling","Banglos","Batangan","Canaway","Catablingan","Lumutan","Magsikap","Mahabang Lalim","Maigang","Maligaya","Minahan Norte","Minahan Sur","Pagsangahan","Pamplona","Pisa","Poblacion","Sablang","San Marcelino","Umiray"],"Guinayangan":["A. Mabini","Aloneros","Arbismen","Bagong Silang","Balinarin","Bukal Maligaya","Cabibihan","Cabong Norte","Cabong Sur","Calimpak","Capuluan Central","Capuluan Tulon","Dancalan Caimawan","Dancalan Central","Danlagan Batis","Danlagan Cabayao","Danlagan Central","Danlagan Reserva","Del Rosario","Dungawan Central","Dungawan Paalyunan","Dungawan Pantay","Ermita","Gapas","Himbubulo Este","Himbubulo Weste","Hinabaan","Ligpit Bantayan","Lubigan","Magallanes","Magsaysay","Manggagawa","Manggalang","Manlayo","Poblacion","Salakan","San Antonio","San Isidro","San Jose","San Lorenzo","San Luis I","San Luis II","San Miguel","San Pedro I","San Pedro II","San Roque","Santa Cruz","Santa Maria","Santa Teresita","Sintones","Sisi","Tikay","Triumpo","Villa Hiwasayan"],"Gumaca":["Adia Bitaog","Anonangin","Bagong Buhay (Pob.)","Bamban","Bantad","Batong Dalig","Biga","Binambang","Buensuceso","Bungahan","Butaguin","Calumangin","Camohaguin","Casasahan Ibaba","Casasahan Ilaya","Cawayan","Gayagayaan","Gitnang Barrio","Hagakhakin","Hardinan","Inaclagan","Inagbuhan Ilaya","Labnig","Laguna","Lagyo","Mabini (Pob.)","Mabunga","Malabtog","Manlayaan","Marcelo H. Del Pilar","Mataas Na Bundok","Maunlad (Pob.)","Pagsabangan","Panikihan","Peñafrancia (Pob.)","Pipisik (Pob.)","Progreso","Rizal (Pob.)","Rosario","San Agustin","San Diego","San Diego Poblacion","San Isidro Kanluran","San Isidro Silangan","San Juan De Jesus","San Vicente","Sastre","Tabing Dagat (Pob.)","Tumayan","Villa Arcaya","Villa Bota","Villa Fuerte","Villa M. Principe","Villa Mendoza","Villa Nava","Villa Padua","Villa Perez","Villa Tañada","Villa Victoria"],"Infanta":["Abiawin","Agos-agos","Alitas","Amolongin","Anibong","Antikin","Bacong","Balobo","Bantilan","Banugao","Batican","Binonoan","Binulasan","Boboin","Catambungan","Cawaynin","Comon","Dinahican","Gumian","Ilog","Ingas","Langgas","Libjo","Lual","Magsaysay","Maypulot","Miswa","Pilaway","Pinaglapatan","Poblacion 1 (Barangay 1)","Poblacion 38 (Poblacion Barangay 2)","Poblacion 39 (Poblacion Barangay 3)","Pulo","Silangan","Tongohin","Tudturan"],"Jomalig":["Apad","Bukal","Casuguran","Gango","Talisoy (Pob.)"],"Lopez":["Bacungan","Bagacay","Banabahin Ibaba","Banabahin Ilaya","Bayabas","Bebito","Bigajo","Binahian A","Binahian B","Binahian C","Bocboc","Buenavista","Burgos (Pob.)","Buyacanin","Cagacag","Calantipayan","Canda Ibaba","Canda Ilaya","Cawayan","Cawayanin","Cogorin Ibaba","Cogorin Ilaya","Concepcion","Danlagan","De La Paz","Del Pilar","Del Rosario","Esperanza Ibaba","Esperanza Ilaya","Gomez (Pob.)","Guihay","Guinuangan","Guites","Hondagua","Ilayang Ilog A","Ilayang Ilog B","Inalusan","Jongo","Lalaguna","Lourdes","Mabanban","Mabini","Magallanes","Magsaysay (Pob.)","Maguilayan","Mahayod-Hayod","Mal-ay","Mandoog","Manguisian","Matinik","Monteclaro","Pamampangin","Pansol","Peñafrancia","Pisipis","Rizal (Poblacion)","Rizal (Rural)","Roma","Rosario","Samat","San Andres","San Antonio","San Francisco A","San Francisco B","San Isidro","San Jose","San Miguel (Dao)","San Pedro","San Rafael","San Roque","Santa Catalina","Santa Elena","Santa Jacobe","Santa Lucia","Santa Maria","Santa Rosa","Santa Teresa (Mayupag)","Santo Niño Ibaba","Santo Niño Ilaya","Silang","Sugod","Sumalang","Talolong (Pob.)","Tan-ag Ibaba","Tan-ag Ilaya","Tocalin","Vegaflor","Vergaña","Veronica","Villa Aurora","Villa Espina","Villa Geda","Villa Hermosa","Villamonte","Villanacaob"],"Lucban":["Abang","Aliliw","Atulinao","Ayuti","Barangay 1 (Pob.)","Barangay 10 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Barangay 5 (Pob.)","Barangay 6 (Pob.)","Barangay 7 (Pob.)","Barangay 8 (Pob.)","Barangay 9 (Pob.)","Igang","Kabatete","Kakawit","Kalangay","Kalyaat","Kilib","Kulapi","Mahabang Parang","Malupak","Manasa","May-It","Nagsinamo","Nalunao","Palola","Piis","Samil","Tiawe","Tinamnan"],"Lucena City (Capital)":["Barangay 1 (Pob.)","Barangay 10 (Pob.)","Barangay 11 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Barangay 5 (Pob.)","Barangay 6 (Pob.)","Barangay 7 (Pob.)","Barangay 8 (Pob.)","Barangay 9 (Pob.)","Barra","Bocohan","Cotta","Dalahican","Domoit","Gulang-gulang","Ibabang Dupay","Ibabang Iyam","Ibabang Talim","Ilayang Dupay","Ilayang Iyam","Ilayang Talim","Isabang","Market View","Mayao Castillo","Mayao Crossing","Mayao Kanluran","Mayao Parada","Mayao Silangan","Ransohan","Salinas","Talao-talao"],"Macalelon":["Amontay","Anos","Buyao","Calantas","Candangal","Castillo (Pob.)","Damayan (Pob.)","Lahing","Luctob","Mabini Ibaba","Mabini Ilaya","Malabahay","Mambog","Masipag (Pob.)","Olongtao Ibaba","Olongtao Ilaya","Padre Herrera","Pag-Asa (Pob.)","Pajarillo","Pinagbayanan","Rizal (Pob.)","Rodriquez (Pob.)","San Isidro","San Jose","San Nicolas","San Vicente","Taguin","Tubigan Ibaba","Tubigan Ilaya","Vista Hermosa"],"Mauban":["Abo-abo","Alitap","Baao","Bagong Bayan (Pob.)","Balaybalay","Bato","Cagbalete I","Cagbalete II","Cagsiay I","Cagsiay II","Cagsiay III","Concepcion","Daungan (Pob.)","Liwayway","Lual (Pob.)","Lual Rural","Lucutan","Luya-luya","Mabato (Pob.)","Macasin","Polo","Remedios I","Remedios II","Rizaliana (Pob.)","Rosario","Sadsaran (Pob.)","San Gabriel","San Isidro","San Jose","San Lorenzo","San Miguel","San Rafael","San Roque","San Vicente","Santa Lucia","Santo Angel","Santo Niño","Santol","Soledad","Tapucan"],"Mulanay":["Ajos","Amuguis","Anonang","Bagong Silang","Bagupaye","Barangay 1 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Bolo","Buenavista","Burgos","Butanyog","Canuyep","F. Nanadiego","Ibabang Cambuga","Ibabang Yuni","Ilayang Cambuga (Mabini)","Ilayang Yuni","Latangan","Magsaysay","Matataja","Pakiing","Patabog","Sagongon","San Isidro","San Pedro","Santa Rosa"],"Padre Burgos":["Basiao (Pob.)","Burgos (Pob.)","Cabuyao Norte","Cabuyao Sur","Campo (Pob.)","Danlagan","Duhat","Hinguiwin","Kinagunan Ibaba","Kinagunan Ilaya","Lipata","Marao","Marquez","Punta (Pob.)","Rizal","San Isidro","San Vicente","Sipa","Tulay Buhangin","Villapaz","Walay","Yawe"],"Pagbilao":["Alupaye","Antipolo","Añato","Bantigue","Barangay 1 Castillo (Pob.)","Barangay 2 Daungan (Pob.)","Barangay 3 Del Carmen (Pob.)","Barangay 4 Parang (Pob.)","Barangay 5 Santa Catalina (Pob.)","Barangay 6 Tambak (Pob.)","Bigo","Binahaan","Bukal","Ibabang Bagumbungan","Ibabang Palsabangon","Ibabang Polo","Ikirin","Ilayang Bagumbungan","Ilayang Palsabangon","Ilayang Polo","Kanluran Malicboy","Mapagong","Mayhay","Pinagbayanan","Silangan Malicboy","Talipan","Tukalan"],"Panukulan":["Balungay","Bato","Bonbon","Calasumanga","Kinalagti","Libo","Lipata","Matangkap","Milawid","Pagitan","Pandan","San Juan (Pob.)"],"Patnanungan":["Amaga","Busdak","Kilogan","Luod","Patnanungan Norte","Patnanungan Sur (Pob.)"],"Perez":["Bagong Pag-Asa Pob. (Barangay 3)","Bagong Silang Pob. (Barangay 4)","Maabot","Mainit Norte","Mainit Sur","Mapagmahal Pob. (Barangay 2)","Pagkakaisa Pob. (Barangay 1)","Pambuhan","Pinagtubigan Este","Pinagtubigan Weste","Rizal","Sangirin","Villamanzano Norte","Villamanzano Sur"],"Pitogo":["Amontay","Biga","Bilucao","Cabulihan","Castillo (Pob.)","Cawayanin","Cometa","Dalampasigan (Pob.)","Dulong Bayan (Pob.)","Gangahin","Ibabang Burgos","Ibabang Pacatin","Ibabang Piña","Ibabang Soliyao","Ilayang Burgos","Ilayang Pacatin","Ilayang Piña","Ilayang Soliyao","Maaliw (Pob.)","Manggahan (Pob.)","Masaya (Pob.)","Mayubok (Pob.)","Nag-Cruz","Osmeña","Pag-Asa (Pob.)","Pamilihan (Pob.)","Payte","Pinagbayanan","Poctol","Quezon","Quinagasan","Rizalino","Saguinsinan","Sampaloc","San Roque","Sisirin","Sumag Este","Sumag Norte","Sumag Weste"],"Plaridel":["Central (Pob.)","Concepcion","Duhat","Ilaya","Ilosong","M. L. Tumagay Pob. (Remas Mabuton)","Paang Bundok (Pob.)","Pampaaralan (Pob.)","Tanauan"],"Polillo":["Anawan","Atulayan","Balesin","Bañadero","Binibitinan","Bislian","Bucao","Canicanian","Kalubakis","Languyin","Libjo","Pamatdan","Pilion","Pinaglubayan","Poblacion","Sabang","Salipsip","Sibulan","Taluong","Tamulaya-Anitong"],"Quezon":["Apad","Argosino","Barangay I (Pob.)","Barangay II (Pob.)","Barangay III (Pob.)","Barangay IV (Pob.)","Barangay V (Pob.)","Barangay VI (Pob.)","Cagbalogo","Caridad","Cometa","Del Pilar","Guinhawa","Gumubat","Magsino","Mascariña","Montaña","Sabang","Silangan","Tagkawa","Villa Belen","Villa Francia","Villa Gomez","Villa Mercedes"],"Real":["Bagong Silang","Capalong","Cawayan","Kiloloran","Llavac","Lubayat","Malapad","Maragondon","Masikap","Maunlad","Pandan","Poblacion 61 (Barangay 2)","Poblacion I (Barangay 1)","Tagumpay","Tanauan","Tignoan","Ungos"],"Sampaloc":["Alupay","Apasan","Banot","Bataan","Bayongon","Bilucao","Caldong","Ibabang Owain","Ilayang Owain","Mamala","San Bueno","San Isidro (Pob.)","San Roque (Pob.)","Taquico"],"San Andres":["Alibihaban","Camflora","Mangero","Pansoy","Poblacion","Tala","Talisay"],"San Antonio":["Arawan","Bagong Niing","Balat Atis","Briones","Bulihan","Buliran","Callejon","Corazon","Loob","Magsaysay","Manuel del Valle, Sr.","Matipunso","Niing","Poblacion","Pulo","Pury","Sampaga","Sampaguita","San Jose","Sinturisan"],"San Francisco (Aurora)":["Butanguiad","Casay","Cawayan I","Cawayan II","Don Juan Vercelos","Huyon-Uyon","Ibabang Tayuman","Ilayang Tayuman","Inabuan","Mabuñga","Nasalaan","Pagsangahan","Poblacion","Pugon","Santo Niño","Silongin"],"San Narciso":["Abuyon","Andres Bonifacio","Bani","Bayanihan (Pob.)","Binay","Buenavista","Busokbusokan","Calwit","Guinhalinan","Lacdayan","Maguiting","Maligaya (Pob.)","Manlampong","Pagdadamayan (Pob.)","Pagkakaisa (Pob.)","Punta","Rizal","San Isidro","San Juan","San Vicente","Vigo Central","Villa Aurin (Pinagsama)","Villa Reyes","White Cliff"],"Sariaya":["Antipolo","Balubal","Barangay 1 (Pob.)","Barangay 2 (Pob.)","Barangay 3 (Pob.)","Barangay 4 (Pob.)","Barangay 5 (Pob.)","Barangay 6 (Pob.)","Bignay 1","Bignay 2","Bucal","Canda","Castañas","Concepcion Banahaw","Concepcion No. 1","Concepcion Palasan","Concepcion Pinagbakuran","Gibanga","Guisguis-San Roque","Guisguis-Talon","Janagdong 1","Janagdong 2","Limbon","Lutucan 1","Lutucan Bata","Lutucan Malabag","Mamala I","Mamala II","Manggalang 1","Manggalang Tulo-tulo","Manggalang-Bantilan","Manggalang-Kiling","Montecillo","Morong","Pili","Sampaloc 1","Sampaloc 2","Sampaloc Bogon","Sampaloc Santo Cristo","Talaan Aplaya","Talaanpantoc","Tumbaga 1","Tumbaga 2"],"Tagkawayan":["Aldavoc","Aliji","Bagong Silang","Bamban","Bosigon","Bukal","Cabibihan","Cabugwang","Cagascas","Candalapdap","Casispalan","Colong-colong","Del Rosario","Katimo","Kinatakutan","Landing","Laurel","Magsaysay","Maguibuay","Mahinta","Malbog","Manato Central","Manato Station","Mangayao","Mansilay","Mapulot","Munting Parang","Payapa","Poblacion","Rizal","Sabang","San Diego","San Francisco","San Isidro","San Roque","San Vicente","Santa Cecilia","Santa Monica","Santo Niño I","Santo Niño II","Santo Tomas","Seguiwan","Tabason","Tunton","Victoria"],"Tiaong":["Anastacia (Tagbak)","Aquino","Ayusan I","Ayusan II","Barangay I (Pob.)","Barangay II (Pob.)","Barangay III (Pob.)","Barangay IV (Pob.)","Behia","Bukal","Bula","Bulakin","Cabatang","Cabay","Del Rosario","Lagalag","Lalig","Lumingon","Lusacan","Paiisa","Palagaran","Quipot","San Agustin","San Francisco","San Isidro","San Jose","San Juan","San Pedro","Tagbakin","Talisay","Tamisian"],"Unisan":["Almacen","Balagtas","Balanacan","Bonifacio","Bulo Ibaba","Bulo Ilaya","Burgos","Cabulihan Ibaba","Cabulihan Ilaya","Caigdal","F. De Jesus (Pob.)","General Luna","Kalilayan Ibaba","Kalilayan Ilaya","Mabini","Mairok Ibaba","Mairok Ilaya","Malvar","Maputat","Muliguin","Pagaguasan","Panaon Ibaba","Panaon Ilaya","Plaridel","Poctol","Punta","R. Lapu-lapu (Pob.)","R. Magsaysay (Pob.)","Raja Soliman (Pob.)","Rizal Ibaba","Rizal Ilaya","San Roque","Socorro","Tagumpay","Tubas","Tubigan"]}};
+
+/* ==========================================================
+   ADDRESS CASCADE: Province -> City -> Barangay
+   ========================================================== */
+
+const provinceInput = document.getElementById('buyerProvince');
+const cityInput = document.getElementById('buyerCity');
+const barangayInput = document.getElementById('buyerBarangay');
+
+
+/* ---------- POPULATE PROVINCES ---------- */
+
+Object.keys(CALABARZON)
+    .sort()
+    .forEach(province => {
+        const option = document.createElement('option');
+        option.value = province;
+        option.textContent = province;
+        provinceInput.appendChild(option);
+    });
+
+
+/* ---------- PROVINCE CHANGES ---------- */
+
+provinceInput.addEventListener('change', function () {
+    
+
+    const province = CALABARZON[this.value];
+
+    // reset city
+    cityInput.innerHTML =
+        '<option value="" disabled selected>Select city / municipality</option>';
+
+    // reset barangay
+    barangayInput.innerHTML =
+        '<option value="" disabled selected>Select city first</option>';
+
+    barangayInput.disabled = true;
+
+    if (!province) {
+        cityInput.disabled = true;
+        cityInput._customSync();
+        barangayInput._customSync();
+        return;
+    }
+
+    // enable city
+    cityInput.disabled = false;
+
+    Object.keys(province)
+        .sort()
+        .forEach(city => {
+
+            const option = document.createElement('option');
+
+            option.value = city;
+            option.textContent = city;
+
+            cityInput.appendChild(option);
+            
+        });
+    cityInput._customSync();
+    barangayInput._customSync(); 
+});
+
+
+/* ---------- CITY CHANGES ---------- */
+
+cityInput.addEventListener('change', function () {
+
+    const province = CALABARZON[provinceInput.value];
+    const barangays = province ? province[this.value] : null;
+
+    barangayInput.innerHTML =
+        '<option value="" disabled selected>Select barangay</option>';
+
+    if (!barangays) {
+        barangayInput.disabled = true;
+        barangayInput._customSync();
+        return;
+    }
+
+    // enable barangay
+    barangayInput.disabled = false;
+
+    barangays.forEach(barangay => {
+
+        const option = document.createElement('option');
+
+        option.value = barangay;
+        option.textContent = barangay;
+
+        barangayInput.appendChild(option);
+    });
+    barangayInput._customSync();
+});
+
+
+/* ==========================================================
+   CHECKOUT FORM VALIDATION
+   ========================================================== */
+document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+
+    e.preventDefault();
+
+    const emailPattern = /^([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\.([a-zA-Z]{2,})$/;
+    const emailValue = document.getElementById('buyerEmail').value.trim();
+    const emailValid = emailPattern.test(emailValue);
+
+    document.getElementById('emailError').hidden = emailValid;
+
+    const province = CALABARZON[provinceInput.value];
+
+    const city = province
+        ? province[cityInput.value]
+        : null;
+
+    const barangayValid =
+        city
+        ? city.includes(barangayInput.value)
+        : false;
+
+    document.getElementById('provinceError').hidden = !!province;
+    document.getElementById('cityError').hidden = !!city;
+    document.getElementById('barangayError').hidden = barangayValid;
+
+    if (!emailValid || !province || !city || !barangayValid) {
+        return;
+    }
+
+    // all valid → show confirm dialog instead of submitting
+    document.getElementById('confirmModal').classList.add('show');
+    startConfirmTimer();
+});
+
+let confirmTimeout = null;
+
+function startConfirmTimer() {
+    clearTimeout(confirmTimeout);
+    confirmTimeout = setTimeout(function () {
+        window.location.href = "ecom catalog.html";
+    }, 15000); // 15 seconds
+}
+
+function cancelConfirmTimer() {
+    clearTimeout(confirmTimeout);
+    confirmTimeout = null;
+}
+
+document.getElementById('confirmCancel').addEventListener('click', function () {
+    document.getElementById('confirmModal').classList.remove('show');
+    cancelConfirmTimer();
+});
+
+document.addEventListener('keydown', function (e) {
+    const confirmModal = document.getElementById('confirmModal');
+    if (!confirmModal.classList.contains('show')) return;
+
+    if (e.key === 'y' || e.key === 'Y') {
+        confirmModal.classList.remove('show');
+        document.getElementById('checkoutModal').classList.remove('show');
+        document.getElementById('successModal').classList.add('show');
+        cancelConfirmTimer();
+    } else if (e.key === 'Escape') {
+        confirmModal.classList.remove('show');
+        cancelConfirmTimer();
+    }
+});
+
+document.getElementById('successOk').addEventListener('click', function () {
+    document.getElementById('successModal').classList.remove('show');
+});
+
+document.getElementById('buyerEmail').addEventListener('input', function () {
+    document.getElementById('emailError').hidden = true;
+});
+
+/* ==========================================================
+   DRESS SEARCH
+   ========================================================== */
+const searchInput = document.getElementById('dressSearch');
+const noResults = document.getElementById('noResults');
+const productCards = document.querySelectorAll('.product');
+
+/* ==========================================================
+   WISHLIST HEARTS ON EVERY CARD
+   ========================================================== */
+let wishlist = [];
+
+productCards.forEach(card => {
+    const imgwrap = card.querySelector('.imgwrap');
+    const heart = document.createElement('button');
+    heart.type = 'button';
+    heart.className = 'wishlist-heart';
+    heart.setAttribute('aria-label', 'Add to wishlist');
+    heart.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1 10.1 1.5 6.5 4.6 5 7 3.9 9.5 5 12 7.7 14.5 5 17 3.9 19.4 5c3.1 1.5 3.6 5.1 1.9 7.9C18.7 16.65 12 21 12 21z"/></svg>`;
+    heart.addEventListener('click', function (e) {
+        e.stopPropagation();
+        toggleWishlist(card, heart);
+    });
+    imgwrap.appendChild(heart);
+});
+
+function toggleWishlist(card, heartBtn) {
+    const name = card.dataset.name;
+    const price = Number(card.dataset.price);
+    const image = card.dataset.image;
+
+    const index = wishlist.findIndex(item => item.name === name);
+
+    if (index === -1) {
+        wishlist.push({ name, price, image });
+        heartBtn.classList.add('active');
+    } else {
+        wishlist.splice(index, 1);
+        heartBtn.classList.remove('active');
+    }
+
+    updateWishlistCount();
+}
+
+/* ==========================================================
+   FIRST-ORDER 10% DISCOUNT
+   ========================================================== */
+productCards.forEach(card => {
+    const original = Number(card.dataset.price);
+    const discounted = Math.round(original * 0.9);
+
+    const priceEl = card.querySelector('.price');
+    priceEl.innerHTML = `<del>₱${original}</del><ins>₱${discounted}</ins>`;
+});
+
+const filterTypeBoxes = document.querySelectorAll('.filter-type');
+const filterPriceBoxes = document.querySelectorAll('.filter-price');
+
+function applyFilters() {
+    const query = searchInput.value.trim().toLowerCase();
+    const checkedTypes = Array.from(filterTypeBoxes).filter(b => b.checked).map(b => b.value);
+    const checkedPrices = Array.from(filterPriceBoxes).filter(b => b.checked).map(b => b.value);
+    let visible = 0;
+
+    productCards.forEach(card => {
+        const matchesSearch = card.dataset.name.toLowerCase().includes(query);
+        const matchesType = checkedTypes.length === 0 || checkedTypes.includes(card.dataset.type);
+
+        const price = Number(card.dataset.price);
+        const matchesPrice = checkedPrices.length === 0 ||
+            (checkedPrices.includes('below') && price < 500) ||
+            (checkedPrices.includes('above') && price >= 500);
+
+        const show = matchesSearch && matchesType && matchesPrice;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+    });
+
+    noResults.hidden = visible > 0;
+}
+
+searchInput.addEventListener('input', applyFilters);
+filterTypeBoxes.forEach(b => b.addEventListener('change', applyFilters));
+filterPriceBoxes.forEach(b => b.addEventListener('change', applyFilters));
+
+/* ==========================================================
+   BACK TO TOP
+   ========================================================== */
+const backToTopBtn = document.getElementById('backToTop');
+
+window.addEventListener('scroll', () => {
+    backToTopBtn.classList.toggle('show', window.scrollY > 300);
+});
+
+backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top:0, behavior:'smooth' });
+});
+
+
+/* ==========================================================
+   STATE
+   ========================================================== */
+let selectedProduct = null;
+let selectedAction = "";
+let cart = [];
+let buyNowItem = null;
+let selectedSize = "";
+
+
+/* ==========================================================
+   OPEN / CLOSE PRODUCT MODAL
+   ========================================================== */
+function openProduct(button, action) {
+
+    const product = button.closest(".product");
+    const originalPrice = Number(product.dataset.price);
+    const discountedPrice = Math.round(originalPrice * 0.9);
+
+    selectedProduct = {
+        name:product.dataset.name,
+        price:discountedPrice,
+        originalPrice:originalPrice,
+        stock:Number(product.dataset.stock),
+        image:product.dataset.image
+    };
+
+    selectedAction = action;
+
+    document.getElementById("modalImage").src = selectedProduct.image;
+    document.getElementById("modalName").textContent = selectedProduct.name;
+    document.getElementById("modalPrice").innerHTML =
+        `<del>₱${selectedProduct.originalPrice}</del><ins>₱${selectedProduct.price}</ins>`;
+    document.getElementById("modalStock").textContent = selectedProduct.stock;
+    document.getElementById("quantityInput").value = 1;
+    document.getElementById("quantityInput").max = selectedProduct.stock;
+    selectedSize = "";
+    document.querySelectorAll(".size-btn").forEach(b => b.classList.remove("selected"));
+
+    document.getElementById("modalAction").textContent =
+        action === "cart" ? "Add to Cart" : "Proceed to Checkout";
+
+    document.getElementById("productModal").classList.add("show");
+}
+
+function closeProductModal() {
+    document.getElementById("productModal").classList.remove("show");
+}
+
+function openLightbox(src, alt) {
+    document.getElementById("lightboxImage").src = src;
+    document.getElementById("lightboxImage").alt = alt;
+    document.getElementById("imageLightbox").classList.add("show");
+}
+function closeLightbox() {
+    document.getElementById("imageLightbox").classList.remove("show");
+}
+document.getElementById("imageLightbox").addEventListener("click", function(e) {
+    if (e.target === this) closeLightbox();
+});
+
+/* ==========================================================
+   QUANTITY
+   ========================================================== */
+function changeQuantity(amount) {
+    const input = document.getElementById("quantityInput");
+    let quantity = Number(input.value) + amount;
+
+    if (quantity < 1) quantity = 1;
+    if (quantity > selectedProduct.stock) quantity = selectedProduct.stock;
+
+    input.value = quantity;
+}
+
+document.getElementById("quantityInput").addEventListener("input", function() {
+    let quantity = Number(this.value);
+
+    if (quantity < 1) this.value = 1;
+    if (quantity > selectedProduct.stock) this.value = selectedProduct.stock;
+});
+
+document.getElementById("buyerContact").addEventListener("input", function () {
+    this.value = this.value.replace(/\D/g, "").slice(0, 11);
+});
+
+function selectSize(button) {
+    document.querySelectorAll(".size-btn").forEach(b => b.classList.remove("selected"));
+    button.classList.add("selected");
+    selectedSize = button.textContent.trim();
+}
+
+/* ==========================================================
+   ADD TO CART / BUY NOW
+   ========================================================== */
+document.getElementById("modalAction").addEventListener("click", function() {
+
+    const quantity = Number(document.getElementById("quantityInput").value);
+
+    if (!selectedSize) {
+        alert("Please select a size.");
+        return;
+    }
+
+    if (quantity < 1 || quantity > selectedProduct.stock) {
+        alert("Please enter a valid quantity.");
+        return;
+    }
+
+
+    /* ---------- BUY NOW: stops at "Proceed to Checkout" for now ---------- */
+    if (selectedAction === "buy") {
+
+        buyNowItem = {
+            name:selectedProduct.name,
+            price:selectedProduct.price,
+            size:selectedSize,
+            quantity:quantity,
+            image:selectedProduct.image
+        };
+
+        proceedToCheckout();
+        return;
+    }
+
+    /* ---------- ADD TO CART ---------- */
+    // stock is shared across all sizes of the same dress
+    const inCart = cart
+        .filter(item => item.name === selectedProduct.name)
+        .reduce((sum, item) => sum + item.quantity, 0);
+
+    if (inCart + quantity > selectedProduct.stock) {
+        alert("Only " + selectedProduct.stock + " in stock. You already have " + inCart + " in your cart.");
+        return;
+    }
+
+    // same dress + same size = one line; different size = separate line
+    const existingItem = cart.find(item =>
+        item.name === selectedProduct.name && item.size === selectedSize
+    );
+
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        cart.push({
+            name:selectedProduct.name,
+            price:selectedProduct.price,
+            size:selectedSize,
+            quantity:quantity,
+            image:selectedProduct.image,
+            selected:true
+        });
+    }
+
+    closeProductModal();
+    updateCart();
+    showToast(selectedProduct.name + " (" + selectedSize + ") added to cart");
+});
+
+/* ==========================================================
+   PROCEED TO CHECKOUT (placeholder: address step not built yet)
+   ========================================================== */
+function proceedToCheckout() {
+    document.getElementById("checkoutModal").classList.add("show");
+    const box = document.querySelector("#checkoutModal .modal-box");
+    if (box) {
+        const resetScroll = () => { box.scrollTop = 0; };
+        resetScroll();
+        requestAnimationFrame(resetScroll);
+        setTimeout(resetScroll, 50);
+        setTimeout(resetScroll, 150);
+        setTimeout(resetScroll, 300);
+    }
+}
+
+function closeCheckout() {
+    document.getElementById("checkoutModal").classList.remove("show");
+}
+
+
+/* ==========================================================
+   TOAST
+   ========================================================== */
+let toastTimer;
+
+function showToast(message) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
+}
+
+
+/* ==========================================================
+   UPDATE CART (list, total and icon badge)
+   ========================================================== */
+function updateCart() {
+
+    let total = 0;
+    let count = 0;
+    let html = "";
+
+    cart.forEach((item, index) => {
+
+        const subtotal = item.price * item.quantity;
+        if (item.selected) total += subtotal;
+        count += item.quantity;
+
+        html += `
+            <div class="cart-item">
+                <input type="checkbox" class="cart-check" ${item.selected ? "checked" : ""}
+                       aria-label="Select ${item.name}" onchange="toggleCartItem(${index})">
+                <img src="${item.image}" alt="${item.name}">
+                <div class="cart-item-info">
+                    <strong>${item.name}</strong>
+                    <small>Size: ${item.size}</small>
+                    <small>₱${item.price} × ${item.quantity}</small>
+                    <small>Subtotal: ₱${subtotal}</small>
+                </div>
+                <button class="cart-remove" aria-label="Remove ${item.name}" onclick="removeCartItem(${index})">×</button>
+            </div>
+        `;
+    });
+
+    document.getElementById("cartItems").innerHTML =
+        cart.length ? html : "<p class='cart-empty'>Your cart is empty.</p>";
+
+    document.getElementById("cartTotal").textContent = total;
+
+    const badge = document.getElementById("cartCount");
+    badge.textContent = count;
+    badge.classList.toggle("show", count > 0);
+}
+
+function removeCartItem(index) {
+    cart.splice(index, 1);
+    updateCart();
+}
+
+function toggleCartItem(index) {
+    cart[index].selected = !cart[index].selected;
+    updateCart();
+}
+
+function selectAllCart(state) {
+    cart.forEach(item => item.selected = state);
+    updateCart();
+}
+
+function checkoutSelected() {
+    const items = cart.filter(item => item.selected);
+    if (!items.length) {
+        alert("Please select at least one item to checkout.");
+        return;
+    }
+    closeCart();
+    proceedToCheckout();
+}
+
+function openCart() {
+    updateCart();
+    document.getElementById("cartModal").classList.add("show");
+}
+
+function closeCart() {
+    document.getElementById("cartModal").classList.remove("show");
+}
+
+function openWishlist() {
+    updateWishlistDisplay();
+    document.getElementById("wishlistModal").classList.add("show");
+}
+
+function closeWishlist() {
+    document.getElementById("wishlistModal").classList.remove("show");
+}
+
+function updateWishlistCount() {
+    const badge = document.getElementById("wishlistCount");
+    badge.textContent = wishlist.length;
+    badge.classList.toggle("show", wishlist.length > 0);
+}
+
+function updateWishlistDisplay() {
+    let html = "";
+    wishlist.forEach((item, index) => {
+        const discounted = Math.round(item.price * 0.9);
+        html += `
+            <div class="cart-item">
+                <img src="${item.image}" alt="${item.name}">
+                <div class="cart-item-info">
+                    <strong>${item.name}</strong>
+                    <small>₱${discounted}</small>
+                </div>
+                <button class="cart-remove" aria-label="Remove ${item.name}" onclick="removeWishlistItem(${index})">×</button>
+            </div>
+        `;
+    });
+
+    document.getElementById("wishlistItems").innerHTML =
+        wishlist.length ? html : "<p class='cart-empty'>Your wishlist is empty.</p>";
+}
+
+function removeWishlistItem(index) {
+    const removedName = wishlist[index].name;
+    wishlist.splice(index, 1);
+    updateWishlistCount();
+    updateWishlistDisplay();
+
+    // un-shade the heart on the matching product card
+    const card = document.querySelector(`.product[data-name="${removedName}"]`);
+    if (card) {
+        const heart = card.querySelector('.wishlist-heart');
+        if (heart) heart.classList.remove('active');
+    }
+}
+
+function toggleSortPanel() {
+    document.getElementById('categoryFilter').classList.toggle('show');
+}
+
+document.addEventListener('click', function (e) {
+    const panel = document.getElementById('categoryFilter');
+    const toggleBtn = document.getElementById('sortToggle');
+    if (!panel.contains(e.target) && !toggleBtn.contains(e.target)) {
+        panel.classList.remove('show');
+    }
+});
+
+function setupCustomSelect(selectEl) {
+    const wrap = selectEl.closest('.custom-select-wrap');
+    const trigger = wrap.querySelector('.custom-select-trigger');
+    const valueEl = trigger.querySelector('.custom-select-value');
+    const list = wrap.querySelector('.custom-select-options');
+
+    function rebuild() {
+        list.innerHTML = '';
+        Array.from(selectEl.options)
+            .filter(o => o.value !== '')
+            .forEach(opt => {
+                const li = document.createElement('li');
+                li.textContent = opt.textContent;
+                if (opt.value === selectEl.value) li.classList.add('selected');
+                li.addEventListener('click', () => {
+                    selectEl.value = opt.value;
+                    selectEl.dispatchEvent(new Event('change'));
+                    closeList();
+                });
+                list.appendChild(li);
+            });
+    }
+
+    function syncLabel() {
+        const placeholderOpt = selectEl.querySelector('option[value=""]');
+        if (selectEl.value) {
+            valueEl.textContent = selectEl.options[selectEl.selectedIndex].textContent;
+            valueEl.classList.remove('placeholder');
+        } else {
+            valueEl.textContent = placeholderOpt ? placeholderOpt.textContent : 'Select';
+            valueEl.classList.add('placeholder');
+        }
+        trigger.disabled = selectEl.disabled;
+    }
+
+    function openList() { if (!selectEl.disabled) { rebuild(); list.hidden = false; wrap.classList.add('open'); } }
+    function closeList() { list.hidden = true; wrap.classList.remove('open'); }
+
+    trigger.addEventListener('click', () => list.hidden ? openList() : closeList());
+    document.addEventListener('click', e => { if (!wrap.contains(e.target)) closeList(); });
+    selectEl.addEventListener('change', syncLabel);
+
+    selectEl._customSync = syncLabel;
+    syncLabel();
+}
+
+setupCustomSelect(provinceInput);
+setupCustomSelect(cityInput);
+setupCustomSelect(barangayInput);
+
+/* ==========================================================
+   CLICK OUTSIDE MODALS TO CLOSE
+   ========================================================== */
+document.getElementById("productModal").addEventListener("click", function(e) {
+    if (e.target === this) closeProductModal();
+});
+
+document.getElementById("cartModal").addEventListener("click", function(e) {
+    if (e.target === this) closeCart();
+});
+
+document.getElementById("checkoutModal").addEventListener("click", function(e) {
+    if (e.target === this) closeCheckout();
+});
+
+document.getElementById("wishlistModal").addEventListener("click", function(e) {
+    if (e.target === this) closeWishlist();
+});
+
+</script>
+
+</body>
+</html>
